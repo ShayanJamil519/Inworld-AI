@@ -2,21 +2,26 @@ import {
   Character,
   HistoryItem,
   InworldConnectionService,
-} from '@inworld/web-sdk';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+} from "@inworld/web-sdk";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
-import './App.css';
-import { Layout } from './app/components/Layout';
-import { Configuration } from './app/types';
-import { ConfigView } from './app/configuration/ConfigView';
-import { InworldService } from './app/connection';
-import { Chat } from './app/chat/Chat';
-import * as defaults from './defaults';
+import "./App.css";
+import { Layout } from "./app/components/Layout";
+import { Configuration } from "./app/types";
+import { ConfigView } from "./app/configuration/ConfigView";
+import { InworldService } from "./app/connection";
+import { Chat } from "./app/chat/Chat";
+import * as defaults from "./defaults";
 import {
   get as getConfiguration,
   save as saveConfiguration,
-} from './app/helpers/configuration';
+} from "./app/helpers/configuration";
+
+import { Route, Routes } from "react-router";
+import Home from "./app/Home/Home";
+
+// -------------------------------------------------
 
 interface CurrentContext {
   characters: Character[];
@@ -33,7 +38,7 @@ function App() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [chatHistory, setChatHistory] = useState<HistoryItem[]>([]);
   const [chatting, setChatting] = useState(false);
-  const [playerName, setPlayerName] = useState('');
+  const [playerName, setPlayerName] = useState("");
 
   const stateRef = useRef<CurrentContext>();
   stateRef.current = {
@@ -51,21 +56,22 @@ function App() {
 
     setChatting(true);
     setPlayerName(form.player?.name!);
-    
+
     const service = new InworldService({
       onHistoryChange,
       sceneName: form.scene?.name!,
       playerName: form.player?.name!,
       onReady: async () => {
-        console.log('Ready!');
+        console.log("Ready!");
       },
       onDisconnect: () => {
-        console.log('Disconnect!');
-      }
+        console.log("Disconnect!");
+      },
     });
     const characters = await service.connection.getCharacters();
-    const character = characters.find((c: Character) =>
-      c.getResourceName() === form.character?.name);
+    const character = characters.find(
+      (c: Character) => c.getResourceName() === form.character?.name
+    );
 
     if (character) {
       service.connection.setCurrentCharacter(character);
@@ -107,36 +113,42 @@ function App() {
     const configuration = getConfiguration();
 
     formMethods.reset({
-      ...configuration
-        ? JSON.parse(configuration) as Configuration
-        : defaults.configuration,
+      ...(configuration
+        ? (JSON.parse(configuration) as Configuration)
+        : defaults.configuration),
     });
 
     setInitialized(true);
   }, [formMethods]);
 
-  const content = chatting
-    ? (<>
-        {character ? (
-          <Chat
-            character={character}
-            chatHistory={chatHistory}
-            connection={connection!}
-            playerName={playerName}
-            onStopChatting={stopChatting}
-          />
-        ) : (
-          'Loading...'
-        )}
-      </>)
-    : (<ConfigView
-        onStart={openConnection}
-        onResetForm={resetForm}
-      />);
+  const content = chatting ? (
+    <>
+      {character ? (
+        <Chat
+          character={character}
+          chatHistory={chatHistory}
+          connection={connection!}
+          playerName={playerName}
+          onStopChatting={stopChatting}
+        />
+      ) : (
+        "Loading..."
+      )}
+    </>
+  ) : (
+    <ConfigView onStart={openConnection} onResetForm={resetForm} />
+  );
 
   return (
     <FormProvider {...formMethods}>
-      <Layout>{ initialized ? content : ''}</Layout>
+      {/* <Layout>{ initialized ? content : ''}</Layout> */}
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+
+          <Route path="/chat" element={initialized ? content : ""} />
+        </Routes>
+      </Layout>
     </FormProvider>
   );
 }

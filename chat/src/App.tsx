@@ -20,6 +20,7 @@ import {
 
 import { Route, Routes } from "react-router";
 import Home from "./app/Home/Home";
+import Payment from "./app/Payment/Payment";
 
 // -------------------------------------------------
 
@@ -145,6 +146,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/payment" element={<Payment />} />
 
           <Route path="/chat" element={initialized ? content : ""} />
         </Routes>

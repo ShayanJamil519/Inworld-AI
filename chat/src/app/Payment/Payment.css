@@ -1,0 +1,124 @@
+.payment__container {
+  width: 100%;
+  min-height: 95vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: auto;
+  flex-direction: column;
+}
+
+.payment__container h1 {
+  font-size: 50px;
+  margin: 0;
+}
+
+.payment__container h4 {
+  font-size: 20px;
+  margin-top: 0;
+  margin-bottom: 50px;
+  color: #525151;
+}
+
+.payment__card__container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.payment__card__container .payment__card {
+  flex: 0.28;
+  text-align: center;
+  background-color: white;
+  box-shadow: 1px 2px 2px 0px rgb(211 208 203);
+  border-radius: 5px;
+}
+
+.payment__card h2 {
+  text-transform: uppercase;
+  background-color: #1919ff;
+  color: white;
+  font-weight: bold;
+  border-bottom: 1px solid #9f9f9f;
+  margin: 0;
+  padding: 12px 0;
+  border-radius: 5px;
+}
+
+.payment__card h1 {
+  margin: 0;
+  font-size: 60px;
+  font-weight: bold;
+  padding: 30px 0;
+  border-bottom: 1px solid #9f9f9f;
+}
+
+.payment__card .plan {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 18px;
+  border-bottom: 1px solid #9f9f9f;
+}
+
+.payment__card .plan h3 {
+  color: #000000;
+  font-weight: 500;
+}
+
+.payment__card .plan h2 {
+  color: white;
+  background-color: #1919ff;
+  padding: 0px 30px;
+  border-radius: 5px;
+}
+
+.payment__card button {
+  font-size: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 12px 0;
+  width: 90%;
+  margin: 30px auto 20px auto;
+  border-radius: 15px;
+  color: white;
+  border: none;
+  background-color: #1919ff;
+}
+
+/* Media Queries */
+
+@media screen and (max-width: 660px) {
+  .payment__container {
+    font-family: "Times New Roman";
+  }
+  .payment__container h1 {
+    font-size: 30px;
+    margin: unset;
+    margin-top: 50px;
+  }
+  .payment__container h4 {
+    font-size: 13px;
+    margin-top: 5px;
+    margin-bottom: 50px;
+  }
+  .payment__card__container {
+    gap: 80px;
+  }
+  .payment__card__container .payment__card {
+    flex: 0.85;
+  }
+  .payment__card h1 {
+    margin: unset;
+    padding: 20px 0;
+  }
+  .payment__card button {
+    font-size: 18px;
+    padding: 12px 0;
+    border-radius: 25px;
+  }
+}

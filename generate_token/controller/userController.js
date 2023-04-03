@@ -1,79 +1,36 @@
-// const { MongoClient } = require("mongodb");
-// var passport = require("passport");
-// var GoogleStrategy = require("passport-google-oidc");
+const User = require('../model/userModel')
+const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+const ErrorHandler = require("../utils/errorhandler");
 
-// const url = process.env.mongoUri;
 
-// googleCallback: function verify(issuer, profile, cb) {
-//   MongoClient.connect(url, function (err, client) {
-//     if (err) {
-//       return cb(err);
-//     }
 
-//     const db = client.db("mydatabase");
+getPackageOfUser = async (req, res) => {
+    try {
+        const user = await User.findOne({email:req?.body.email })
+        const package = user?.package;
+        res.status(200).json({
+            sucess: true,
+            package
+        })
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ error });
+    }
+  };
 
-//     db.collection("federated_credentials").findOne(
-//       {
-//         provider: issuer,
-//         subject: profile.id,
-//       },
-//       function (err, row) {
-//         if (err) {
-//           return cb(err);
-//         }
-//         if (!row) {
-//           db.collection("users").insertOne(
-//             {
-//               name: profile.displayName,
-//             },
-//             function (err, result) {
-//               if (err) {
-//                 return cb(err);
-//               }
+LimitRequest = async (req, res) => {
+    try {
+        res.status(200).json({
+            sucess: true,
+        })
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ error });
+    }
+  };
 
-//               const id = result.insertedId;
-//               db.collection("federated_credentials").insertOne(
-//                 {
-//                   user_id: id,
-//                   provider: issuer,
-//                   subject: profile.id,
-//                 },
-//                 function (err) {
-//                   if (err) {
-//                     return cb(err);
-//                   }
-//                   const user = {
-//                     id: id,
-//                     name: profile.displayName,
-//                   };
-//                   client.close();
-//                   return cb(null, user);
-//                 }
-//               );
-//             }
-//           );
-//         } else {
-//           db.collection("users").findOne(
-//             {
-//               _id: row.user_id,
-//             },
-//             function (err, row) {
-//               if (err) {
-//                 return cb(err);
-//               }
-//               if (!row) {
-//                 return cb(null, false);
-//               }
-//               client.close();
-//               return cb(null, row);
-//             }
-//           );
-//         }
-//       }
-//     );
-//   });
-// }
-
-// module.exports = {
-//   googleCallback,
-// };
+  module.exports = {
+    getPackageOfUser,
+    LimitRequest
+  };
+  

@@ -10,6 +10,7 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("./model/userModel");
 const session = require("express-session");
+const rateLimit = require('express-rate-limit')
 
 const app = express();
 const PORT = 4000;
@@ -33,6 +34,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 const client = new InworldClient().setApiKey({
   key: process.env.INWORLD_KEY!,
@@ -41,6 +43,37 @@ const client = new InworldClient().setApiKey({
 
 app.use(cors());
 app.use("/payment", paymentRoutes);
+
+const freeLimiter = rateLimit({
+	windowMs: 60 * 60 * 1000, 
+	max: 5, 
+	standardHeaders: true,
+	legacyHeaders: false, 
+})
+
+const user = require("./routes/userRoutes");
+app.use("/api/user",freeLimiter, user);
+
+
+const standardLimiter = rateLimit({
+	windowMs: 60 * 60 * 1000, 
+	max: 6, 
+	standardHeaders: true,
+	legacyHeaders: false, 
+})
+
+const standardUser = require("./routes/standardUserRoutes");
+app.use("/api/standarduser",standardLimiter, standardUser);
+
+const PremiumLimiter = rateLimit({
+	windowMs: 60 * 60 * 1000, 
+	max: 7, 
+	standardHeaders: true,
+	legacyHeaders: false, 
+})
+
+const premiumUser = require("./routes/premiumUserRoutes");
+app.use("/api/premiumuser",PremiumLimiter, premiumUser);
 
 app.get("/", async (_, res) => {
   const token = await client.generateSessionToken();

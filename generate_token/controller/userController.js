@@ -20,6 +20,7 @@ getPackageOfUser = async (req, res) => {
 
 LimitRequest = async (req, res) => {
     try {
+      console.log("api called")
         res.status(200).json({
             sucess: true,
         })

@@ -46,9 +46,10 @@ app.use("/payment", paymentRoutes);
 
 const freeLimiter = rateLimit({
 	windowMs: 60 * 60 * 1000, 
-	max: 5, 
+	max: 2, 
 	standardHeaders: true,
 	legacyHeaders: false, 
+  message:"gi"
 })
 
 const user = require("./routes/userRoutes");
@@ -60,6 +61,8 @@ const standardLimiter = rateLimit({
 	max: 6, 
 	standardHeaders: true,
 	legacyHeaders: false, 
+
+  
 })
 
 const standardUser = require("./routes/standardUserRoutes");

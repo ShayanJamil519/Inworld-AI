@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Stack } from '@mui/system';
 import { CopyConfirmedDialog } from './CopyConfirmedDialog';
 import { RecordIcon } from './Chat.styled';
+import axios from "axios";
 
 interface ChatProps {
   character: Character;
@@ -38,6 +39,14 @@ export function Chat(props: ChatProps) {
   const handleTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   }, []);
+
+  async function fetchData() {
+    // You can await here
+    const { data } = await axios.get(
+      `http://localhost:4000/api/user/limit`
+    );
+    console.log(data)
+  }
 
   const formatTranscript = useCallback(
     (messages: HistoryItem[]) => {
@@ -144,6 +153,7 @@ export function Chat(props: ChatProps) {
 
   const handleSend = useCallback(() => {
     if (text) {
+      //fetchData();
       !hasPlayedWorkaroundSound && playWorkaroundSound();
 
       connection?.sendText(text);

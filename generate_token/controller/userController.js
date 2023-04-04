@@ -4,6 +4,7 @@ const ErrorHandler = require("../utils/errorhandler");
 
 
 
+
 getPackageOfUser = async (req, res) => {
     try {
         const user = await User.findOne({email:req?.body.email })

@@ -9,7 +9,9 @@ import paymentRoutes, { use } from "./routes/paymentRoutes";
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("./model/userModel");
-const session = require("express-session");
+import session from 'express-session'
+import MongoStore from 'connect-mongo'
+const cookieSession = require('cookie-session');
 const rateLimit = require('express-rate-limit')
 
 const app = express();
@@ -27,10 +29,19 @@ if (!process.env.INWORLD_SECRET) {
 app.use(
   session({
     secret: "your-secret-key",
+    store: MongoStore.create({
+      mongoUrl: process.env.mongoUri!
+    }),
     resave: false,
     saveUninitialized: false,
   })
 );
+
+/*app.use(cookieSession({
+  name: 'google-auth-session',
+  keys: ['key1', 'key2'],
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}))*/
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -129,7 +140,7 @@ passport.use(
 
 // Serialize user
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user);
 });
 
 // Deserialize user
@@ -157,6 +168,8 @@ app.get(
     res.redirect("http://localhost:3000/chat");
   }
 );
+
+
 
 app.listen(PORT, () => {
   console.log(`Listening to port ${PORT}`);

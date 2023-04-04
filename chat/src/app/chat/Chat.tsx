@@ -11,7 +11,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { Stack } from '@mui/system';
 import { CopyConfirmedDialog } from './CopyConfirmedDialog';
 import { RecordIcon } from './Chat.styled';
-import axios from "axios";
+import { useLocation } from "react-router-dom";
+import axios, { AxiosPromise } from "axios";
 
 interface ChatProps {
   character: Character;
@@ -35,17 +36,44 @@ export function Chat(props: ChatProps) {
   const [copyConfirmOpen, setCopyConfirmOpen] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [hasPlayedWorkaroundSound, setHasPlayedWorkaroundSound] = useState(false);
+  const search = useLocation().search;
+  const email = new URLSearchParams(search).get("email");
 
   const handleTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   }, []);
 
   async function fetchData() {
-    // You can await here
-    const { data } = await axios.get(
-      `http://localhost:4000/api/user/limit`
+    var result=3;
+    console.log(email)
+    const {data} = await axios.get(
+      `http://localhost:4000/payment/package/${email}`
     );
-    console.log(data)
+    if(data.package==0){
+      const {data} = await axios.get(
+        `http://localhost:4000/api/user/limit`)
+        if (data.message=="nice"){
+          console.log("Working Great")
+          result = 1;
+        }
+    }
+    if(data.package==1){
+      const {data} = await axios.get(
+        `http://localhost:4000/api/standarduser/limit`)
+        if (data.message=="nice"){
+          console.log("Working Great")
+          result = 2;
+        }
+    }
+    if(data.package==2){
+      const {data} = await axios.get(
+        `http://localhost:4000/api/premiumuser/limit`)
+        if (data.message=="nice"){
+          console.log("Working Great")
+          result = 3;
+        }
+    }
+
   }
 
   const formatTranscript = useCallback(
@@ -151,14 +179,28 @@ export function Chat(props: ChatProps) {
     setHasPlayedWorkaroundSound(true);
   }, [connection, setHasPlayedWorkaroundSound]);
 
+  async function asyncHandleSendData() {
+    if (text) {
+      var result =await fetchData();
+      if(result==1){
+      console.log("succ");
+      fetchData();
+      !hasPlayedWorkaroundSound && playWorkaroundSound();
+      connection?.sendText(text);
+      setText('');
+      }
+    }
+  }
+
   const handleSend = useCallback(() => {
     if (text) {
-      //fetchData();
+      
       !hasPlayedWorkaroundSound && playWorkaroundSound();
 
       connection?.sendText(text);
 
       setText('');
+      
     }
   }, [connection, hasPlayedWorkaroundSound, playWorkaroundSound, text]);
 
@@ -232,7 +274,7 @@ export function Chat(props: ChatProps) {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={handleSend}>
+                    <IconButton onClick={asyncHandleSendData}>
                       <Send />
                     </IconButton>
                   </InputAdornment>

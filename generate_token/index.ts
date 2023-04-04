@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { InworldClient } from "@inworld/nodejs-sdk";
 import cors from "cors";
-import express from "express";
+import express , {Request} from "express";
 import bodyParser from "body-parser";
 import mongoose, { ConnectOptions } from "mongoose";
 import paymentRoutes, { use } from "./routes/paymentRoutes";
@@ -165,7 +165,8 @@ app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect("http://localhost:3000/chat");
+    var email = req.user?.email;
+    res.redirect("http://localhost:3000/chat?email=" + email);
   }
 );
 

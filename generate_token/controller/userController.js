@@ -7,7 +7,7 @@ const ErrorHandler = require("../utils/errorhandler");
 
 getPackageOfUser = async (req, res) => {
     try {
-        const user = await User.findOne({email:req?.body.email })
+        const user = await User.findOne({email:req.params.email })
         const package = user?.package;
         res.status(200).json({
             sucess: true,
@@ -23,7 +23,7 @@ LimitRequest = async (req, res) => {
     try {
       console.log("api called")
         res.status(200).json({
-            sucess: true,
+            message: "nice"
         })
     } catch (error) {
       console.log(error);

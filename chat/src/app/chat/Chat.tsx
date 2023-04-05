@@ -1,16 +1,23 @@
+import { CopyAll, Mic, Send } from "@mui/icons-material";
 import {
-  CopyAll,
-  Mic,
-  Send,
-} from '@mui/icons-material';
-import { Button, Grid, IconButton, InputAdornment, TextField } from '@mui/material';
-import { Character, CHAT_HISTORY_TYPE, HistoryItem, InworldConnectionService } from '@inworld/web-sdk';
+  Button,
+  Grid,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
+import {
+  Character,
+  CHAT_HISTORY_TYPE,
+  HistoryItem,
+  InworldConnectionService,
+} from "@inworld/web-sdk";
 
-import { History } from './History';
-import { useCallback, useEffect, useState } from 'react';
-import { Stack } from '@mui/system';
-import { CopyConfirmedDialog } from './CopyConfirmedDialog';
-import { RecordIcon } from './Chat.styled';
+import { History } from "./History";
+import { useCallback, useEffect, useState } from "react";
+import { Stack } from "@mui/system";
+import { CopyConfirmedDialog } from "./CopyConfirmedDialog";
+import { RecordIcon } from "./Chat.styled";
 import { useLocation } from "react-router-dom";
 import axios, { AxiosPromise } from "axios";
 
@@ -22,63 +29,66 @@ interface ChatProps {
   onStopChatting: () => void;
 }
 
+interface fetchData {
+  (): Promise<Number>;
+}
 export function Chat(props: ChatProps) {
-  const {
-    character,
-    chatHistory,
-    connection,
-    playerName,
-    onStopChatting,
-  } = props;
+  const { character, chatHistory, connection, playerName, onStopChatting } =
+    props;
 
-  const [text, setText] = useState('');
-  const [copyDestination, setCopyDestination] = useState('');
+  const [text, setText] = useState("");
+  const [copyDestination, setCopyDestination] = useState("");
   const [copyConfirmOpen, setCopyConfirmOpen] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [hasPlayedWorkaroundSound, setHasPlayedWorkaroundSound] = useState(false);
+  const [hasPlayedWorkaroundSound, setHasPlayedWorkaroundSound] =
+    useState(false);
   const search = useLocation().search;
   const email = new URLSearchParams(search).get("email");
 
-  const handleTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
-  }, []);
+  const handleTextChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setText(e.target.value);
+    },
+    []
+  );
 
-  async function fetchData() {
-    var result=3;
-    console.log(email)
-    const {data} = await axios.get(
+  async function fetchData(): Promise<Number> {
+    var result = 3;
+    console.log(email);
+    const { data } = await axios.get(
       `http://localhost:4000/payment/package/${email}`
     );
-    if(data.package==0){
-      const {data} = await axios.get(
-        `http://localhost:4000/api/user/limit`)
-        if (data.message=="nice"){
-          console.log("Working Great")
-          result = 1;
-        }
+    if (data.package == 0) {
+      const { data } = await axios.get(`http://localhost:4000/api/user/limit`);
+      if (data.message == "nice") {
+        console.log("Working Great");
+        result = 1;
+      }
     }
-    if(data.package==1){
-      const {data} = await axios.get(
-        `http://localhost:4000/api/standarduser/limit`)
-        if (data.message=="nice"){
-          console.log("Working Great")
-          result = 2;
-        }
+    if (data.package == 1) {
+      const { data } = await axios.get(
+        `http://localhost:4000/api/standarduser/limit`
+      );
+      if (data.message == "nice") {
+        console.log("Working Great");
+        result = 2;
+      }
     }
-    if(data.package==2){
-      const {data} = await axios.get(
-        `http://localhost:4000/api/premiumuser/limit`)
-        if (data.message=="nice"){
-          console.log("Working Great")
-          result = 3;
-        }
+    if (data.package == 2) {
+      const { data } = await axios.get(
+        `http://localhost:4000/api/premiumuser/limit`
+      );
+      if (data.message == "nice") {
+        console.log("Working Great");
+        result = 3;
+      }
     }
-
+    return result;
   }
 
   const formatTranscript = useCallback(
     (messages: HistoryItem[]) => {
-      let transcript = '';
+      let transcript = "";
       let characterLastSpeaking = false; // Used to combine all Character text chunks
 
       messages.forEach((item) => {
@@ -89,27 +99,24 @@ export function Chat(props: ChatProps) {
               ? item.character?.getDisplayName()
               : playerName;
 
-            transcript += characterLastSpeaking && isCharacter
-              ? item.text
-              : `\n${givenName}: ${item.text}`;
-            characterLastSpeaking = isCharacter
+            transcript +=
+              characterLastSpeaking && isCharacter
+                ? item.text
+                : `\n${givenName}: ${item.text}`;
+            characterLastSpeaking = isCharacter;
             break;
         }
       });
 
       return transcript;
     },
-    [playerName],
+    [playerName]
   );
 
   const getTranscript = useCallback(
-    (
-      messages: HistoryItem[],
-      startId?: string,
-      endId?: string,
-    ) => {
+    (messages: HistoryItem[], startId?: string, endId?: string) => {
       if (!messages.length) {
-        return '';
+        return "";
       }
 
       // get full array by default
@@ -136,11 +143,9 @@ export function Chat(props: ChatProps) {
       }
 
       // generate eventual transcript
-      return formatTranscript(
-        messages.slice(startIndex, endIndex + 1)
-      );
+      return formatTranscript(messages.slice(startIndex, endIndex + 1));
     },
-    [formatTranscript],
+    [formatTranscript]
   );
 
   const handleCopyClick = useCallback(async () => {
@@ -148,10 +153,10 @@ export function Chat(props: ChatProps) {
 
     if (navigator.clipboard) {
       navigator.clipboard.writeText(history).then(() => {
-        setCopyDestination('clipboard');
+        setCopyDestination("clipboard");
       });
     } else {
-      setCopyDestination('console');
+      setCopyDestination("console");
     }
 
     setCopyConfirmOpen(true);
@@ -181,36 +186,36 @@ export function Chat(props: ChatProps) {
 
   async function asyncHandleSendData() {
     if (text) {
-      var result =await fetchData();
-      if(result==1){
-      console.log("succ");
-      fetchData();
-      !hasPlayedWorkaroundSound && playWorkaroundSound();
-      connection?.sendText(text);
-      setText('');
+      var result = await fetchData();
+      if (result == 1) {
+        console.log("succ");
+        !hasPlayedWorkaroundSound && playWorkaroundSound();
+        connection?.sendText(text);
+        setText("");
       }
     }
   }
 
   const handleSend = useCallback(() => {
     if (text) {
-      
       !hasPlayedWorkaroundSound && playWorkaroundSound();
 
       connection?.sendText(text);
 
-      setText('');
-      
+      setText("");
     }
   }, [connection, hasPlayedWorkaroundSound, playWorkaroundSound, text]);
 
-  const handleTextKeyPress = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSend();
-    }
-  }, [handleSend]);
+  const handleTextKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        handleSend();
+      }
+    },
+    [handleSend]
+  );
 
-  const handleSpeakClick = useCallback(async () => { 
+  const handleSpeakClick = useCallback(async () => {
     !hasPlayedWorkaroundSound && playWorkaroundSound();
 
     if (isRecording) {
@@ -232,21 +237,18 @@ export function Chat(props: ChatProps) {
 
   return (
     <>
-      <Grid
-        container
-        sx={{ mb: 2, mt: 10 }}
-      >
+      <Grid container sx={{ mb: 2, mt: 10 }}>
         <Grid
           item
           xs={12}
           sm={6}
           sx={{
-            backgroundColor: 'white',
-            padding: '0.5rem 1.5rem',
-            borderRadius: '1rem',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
+            backgroundColor: "white",
+            padding: "0.5rem 1.5rem",
+            borderRadius: "1rem",
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           <History
@@ -254,7 +256,7 @@ export function Chat(props: ChatProps) {
             character={character}
             playerName={playerName}
           />
-          <Stack direction="row-reverse" sx={{ mb: '1' }}>
+          <Stack direction="row-reverse" sx={{ mb: "1" }}>
             <IconButton onClick={handleCopyClick}>
               <CopyAll fontSize="small" />
             </IconButton>
@@ -268,8 +270,8 @@ export function Chat(props: ChatProps) {
               onKeyPress={handleTextKeyPress}
               sx={{
                 backgroundColor: (theme) => theme.palette.grey[100],
-                borderRadius: '1rem',
-                padding: '1rem',
+                borderRadius: "1rem",
+                padding: "1rem",
               }}
               InputProps={{
                 endAdornment: (
@@ -284,26 +286,26 @@ export function Chat(props: ChatProps) {
             />
             <IconButton
               onClick={handleSpeakClick}
-              sx={{ height: '3rem', width: '3rem', backgroundColor: '#F1F5F9' }}
+              sx={{ height: "3rem", width: "3rem", backgroundColor: "#F1F5F9" }}
             >
               {isRecording ? <RecordIcon /> : <Mic />}
             </IconButton>
           </Stack>
         </Grid>
-        <Grid item xs={12} sm={1}/>
+        <Grid item xs={12} sm={1} />
         <Grid
           item
           xs={12}
           sm={5}
           sx={{
-            backgroundColor: 'white',
-            padding: '0.5rem 1.5rem',
-            borderRadius: '1rem',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
+            backgroundColor: "white",
+            padding: "0.5rem 1.5rem",
+            borderRadius: "1rem",
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
           }}
-          >
+        >
           <img
             alt={character.getDisplayName()}
             src={character.getAssets().rpmImageUriPortrait}
@@ -315,13 +317,10 @@ export function Chat(props: ChatProps) {
         mt={1}
         spacing={2}
         alignItems="center"
-        justifyContent={'flex-start'}
+        justifyContent={"flex-start"}
       >
         <Grid item>
-          <Button
-            variant="outlined"
-            onClick={onStopChatting}
-          >
+          <Button variant="outlined" onClick={onStopChatting}>
             Back to settings
           </Button>
         </Grid>

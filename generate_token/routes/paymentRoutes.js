@@ -1,19 +1,14 @@
-
 const express = require("express");
 const {
+  createSubscription,
   getPublishableKey,
-  createPaymentIntent,
 } = require("../controller/paymentController");
 
-const {
-  getPackageOfUser
-} = require("../controller/userController");
-
+const { getPackageOfUser } = require("../controller/userController");
 
 const router = express.Router();
 
-router.route("/config").get(getPublishableKey);
-router.route("/create-payment-intent").post(createPaymentIntent);
-router.route("/package/:email").get(getPackageOfUser);
+router.route("/create-subscription").post(createSubscription);
+router.route("/get-publishableKey").get(getPublishableKey);
 
 module.exports = router;

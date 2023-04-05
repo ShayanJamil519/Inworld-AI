@@ -5,6 +5,8 @@ import {
 } from "@inworld/web-sdk";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 import "./App.css";
 import { Layout } from "./app/components/Layout";
@@ -18,10 +20,11 @@ import {
   save as saveConfiguration,
 } from "./app/helpers/configuration";
 
-import { Route, Routes } from "react-router";
+import { Route, Routes } from "react-router-dom";
 import Home from "./app/Home/Home";
 import Payment from "./app/Payment/Payment";
-
+import axios from "axios";
+import CheckOutWithStripe from "./app/Payment/CheckOutWithStripe";
 // -------------------------------------------------
 
 interface CurrentContext {
@@ -32,6 +35,8 @@ interface CurrentContext {
 
 function App() {
   const formMethods = useForm<Configuration>();
+
+  const [publishKey, setPublishKey] = useState("");
 
   const [initialized, setInitialized] = useState(false);
   const [connection, setConnection] = useState<InworldConnectionService>();
@@ -122,6 +127,16 @@ function App() {
     setInitialized(true);
   }, [formMethods]);
 
+  // useEffect(() => {
+  //   fetch("http://localhost:4000/payment/get-publishableKey").then(
+  //     async (r) => {
+  //       const { publishableKey } = await r.json();
+  //       setPublishKey(publishableKey);
+  //       // console.log(publishableKey);
+  //     }
+  //   );
+  // }, []);
+
   const content = chatting ? (
     <>
       {character ? (
@@ -147,6 +162,16 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/payment" element={<Payment />} />
+          <Route
+            path="/payment/checkout/:priceId"
+            element={<CheckOutWithStripe />}
+          />
+
+          {/* {publishKey && (
+              <Elements stripe={loadStripe(publishKey)}>
+                <Route path="/payment/checkout" element={<CheckOut />} />
+              </Elements>
+            )} */}
 
           <Route path="/chat" element={initialized ? content : ""} />
         </Routes>

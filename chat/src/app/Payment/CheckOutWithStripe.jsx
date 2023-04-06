@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import {
@@ -15,16 +15,23 @@ import { GrMail } from "react-icons/gr";
 import { MdAccountCircle } from "react-icons/md";
 import "./Payment.css";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const CheckOut = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  // const [package, setPackage] = useState("");
+
+  const [pack, setPack] = useState("0");
+
   const stripe = useStripe();
   const elements = useElements();
   const { priceId } = useParams();
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    // let pkg = await getPackage(priceId);
+    console.log(pack);
     try {
       const cardElement = elements?.getElement(CardNumberElement);
       if (!cardElement) {
@@ -66,15 +73,51 @@ const CheckOut = () => {
         response.clientSecret
       );
 
+      console.log("confirmPayment", confirmPayment);
+
       if (confirmPayment?.error) {
         console.log("error occ: ", confirmPayment.error.message);
       } else {
         console.log("Success! Check your email for the invoice.");
+
+        // let data = JSON.stringify({
+        //   package: "2",
+        // });
+
+        let config = {
+          method: "put",
+          maxBodyLength: Infinity,
+          url: `http://localhost:4000/api/user/update/${email}`,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: JSON.stringify({
+            package: pack,
+          }),
+        };
+
+        const updatePackage = await axios
+          .request(config)
+          .then((response) => {
+            console.log(JSON.stringify(response.data));
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    // scroll chat down on history change
+    if (priceId == "price_1MtId7H5DTXndbM5S6011iYS") {
+      setPack("1");
+    } else {
+      setPack("2");
+    }
+  }, [priceId]);
 
   return (
     <div className="paymentContainer">

@@ -5,9 +5,15 @@ import express, { Request } from "express";
 import bodyParser from "body-parser";
 import mongoose, { ConnectOptions } from "mongoose";
 import paymentRoutes, { use } from "./routes/paymentRoutes";
+const cloudinary = require("cloudinary");
+
+
 
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const FacebookStrategy = require("passport-facebook").Strategy;
+var TwitterStrategy = require('passport-twitter');
+
 const User = require("./model/userModel");
 import session from "express-session";
 import MongoStore from "connect-mongo";
@@ -36,6 +42,12 @@ app.use(
     saveUninitialized: false,
   })
 );
+
+cloudinary.config({
+  cloud_name: process.env.cloudinaryCloudName,
+  api_key: process.env.APIKey,
+  api_secret: process.env.APISecret,
+});
 
 /*app.use(cookieSession({
   name: 'google-auth-session',
@@ -66,6 +78,11 @@ const freeLimiter = rateLimit({
 
 const user = require("./routes/userRoutes");
 app.use("/api/user", freeLimiter, user);
+
+const img = require("./routes/imgRoutes");
+app.use("/api/img", img);
+
+
 
 const standardLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
@@ -108,6 +125,64 @@ const connectDB = async () => {
 };
 
 connectDB();
+
+// passport.js Twitter Authentication
+passport.use(new TwitterStrategy({
+  consumerKey: process.env.TWITTER_API_KEY,
+  consumerSecret: process.env.TWITTER_API_SECRET,
+  callbackURL: '/auth/twitter/callback'
+},
+function(token, tokenSecret, profile, done) {
+  User.findOne({ 'googleId': profile.id }, function (err, user) {
+    if (err) { return done(err); }
+    if (!user) {
+      user = new User({
+        googleId : profile.id,
+        name: profile.displayName,
+        email: profile.email,
+
+      });
+      user.save(function (err) {
+        if (err) console.log(err);
+        return done(err, user);
+      });
+    } else {
+      return done(err, user);
+    }
+  });
+}
+));
+
+// passport.js FaceBook Authentication
+passport.use(new FacebookStrategy({
+  clientID: process.env.FACEBOOK_APP_ID,
+  clientSecret: process.env.FACEBOOK_APP_SECRET,
+  callbackURL: "/auth/facebook/callback",
+  profileFields: ['id', 'displayName', 'email']
+},
+/*function(accessToken, refreshToken, profile, cb) {
+  User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+    return cb(err, user);
+  });
+}*/
+async (accessToken, refreshToken, profile, done) => {
+  // Check if user already exists in our database
+  const user = await User.findOne({ googleId: profile.id }).exec();
+  if (user) {
+    done(null, user);
+  } else {
+    // Create new user
+    const newUser = new User({
+      googleId: profile.id,
+      name: profile.displayName,
+      email: profile.email,
+    });
+    await newUser.save();
+    done(null, newUser);
+  }
+}
+)
+);
 
 // passport.js Google Authentication
 passport.use(
@@ -167,6 +242,28 @@ app.get(
     res.redirect("http://localhost:3000/chat?email=" + email);
   }
 );
+
+
+// Set up Twitter auth route
+app.get('/login/twitter', passport.authenticate('twitter'));
+app.get('/oauth/callback/twitter',
+  passport.authenticate('twitter', { failureRedirect: '/login', failureMessage: true }),
+  function(req, res) {
+    var email = req.user?.email;
+    res.redirect("http://localhost:3000/chat?email=" + email);
+  });
+
+// Set up Fb auth route
+app.get('/auth/facebook',
+  passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    var email = req.user?.email;
+    res.redirect("http://localhost:3000/chat?email=" + email);
+  });
 
 app.listen(PORT, () => {
   console.log(`Listening to port ${PORT}`);

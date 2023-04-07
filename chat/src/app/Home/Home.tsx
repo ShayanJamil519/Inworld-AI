@@ -16,10 +16,12 @@ const Home = () => {
           <FcGoogle /> Continue with google
         </button>
         </Link>
+        <Link to="http://localhost:4000/auth/facebook">
         <button className="socials__login">
           {" "}
           <FaFacebookF style={{ color: "#3b5998" }} /> Continue with facebook
         </button>
+        </Link>
         <button className="socials__login">
           {" "}
           <BsTwitter style={{ color: "#00acee" }} /> Continue with twitter

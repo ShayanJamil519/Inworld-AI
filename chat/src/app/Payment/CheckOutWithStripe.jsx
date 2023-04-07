@@ -20,6 +20,9 @@ import axios from "axios";
 const CheckOut = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [secret, setSecret] = useState("");
+  const [subscription, setSubscription] = useState("");
+
   // const [package, setPackage] = useState("");
 
   const [pack, setPack] = useState("0");
@@ -51,7 +54,7 @@ const CheckOut = () => {
 
       console.log("paymentMethod: ", paymentMethod);
 
-      // call the backend to create subscription
+      // // call the backend to create subscription
       const response = await fetch(
         "http://localhost:4000/payment/create-subscription",
         {
@@ -68,45 +71,58 @@ const CheckOut = () => {
         }
       ).then((res) => res.json());
 
-      // confirm the payment by the user
-      const confirmPayment = await stripe?.confirmCardPayment(
-        response.clientSecret
-      );
+      console.log("response: ", response);
 
-      console.log("confirmPayment", confirmPayment);
+      console.log("secret: ", secret);
+      console.log("subscription: ", subscription);
 
-      if (confirmPayment?.error) {
-        console.log("error occ: ", confirmPayment.error.message);
+      console.log("response: ", response);
+
+      if (response.clientSecret) {
+        // confirm the payment by the user
+        const confirmPayment = await stripe?.confirmCardPayment(
+          response.clientSecret
+        );
+
+        console.log("confirmPayment", confirmPayment);
+        // console.log("subscriptionId", subscriptionId);
+
+        if (confirmPayment?.error) {
+          console.log("error occ: ", confirmPayment.error.message);
+        } else {
+          console.log("Success! Check your email for the invoice.");
+
+          // let data = JSON.stringify({
+          //   package: "2",
+          // });
+
+          let config = {
+            method: "put",
+            maxBodyLength: Infinity,
+            url: `http://localhost:4000/api/user/update/${email}`,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            data: JSON.stringify({
+              package: pack,
+              subscriptionId: response.subscriptionId,
+            }),
+          };
+
+          const updatePackage = await axios
+            .request(config)
+            .then((response) => {
+              console.log(JSON.stringify(response.data));
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
       } else {
-        console.log("Success! Check your email for the invoice.");
-
-        // let data = JSON.stringify({
-        //   package: "2",
-        // });
-
-        let config = {
-          method: "put",
-          maxBodyLength: Infinity,
-          url: `http://localhost:4000/api/user/update/${email}`,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          data: JSON.stringify({
-            package: pack,
-          }),
-        };
-
-        const updatePackage = await axios
-          .request(config)
-          .then((response) => {
-            console.log(JSON.stringify(response.data));
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        console.log(response.message);
       }
     } catch (error) {
-      console.log(error);
+      console.log("I am catch error", error);
     }
   };
 

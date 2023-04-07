@@ -25,6 +25,7 @@ import Home from "./app/Home/Home";
 import Payment from "./app/Payment/Payment";
 import axios from "axios";
 import CheckOutWithStripe from "./app/Payment/CheckOutWithStripe";
+import UploadImage from "./app/UploadImage/UploadImage";
 // -------------------------------------------------
 
 interface CurrentContext {
@@ -162,6 +163,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/upload" element={<UploadImage />} />
+
           <Route
             path="/payment/checkout/:priceId"
             element={<CheckOutWithStripe />}

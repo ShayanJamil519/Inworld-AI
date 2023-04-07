@@ -1,54 +1,63 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const User = require("../model/userModel");
 
 const createSubscription = async (req, res) => {
   try {
     const { name, email, paymentMethod, priceId } = req.body;
 
-    // create customer
-    const customer = await stripe.customers.create({
-      name: name,
-      email: email,
-      payment_method: paymentMethod,
-      invoice_settings: {
-        default_payment_method: paymentMethod,
-      },
-    });
-
-    // console.log("customer: ", customer);
-    console.log(name, email, paymentMethod, priceId);
-
-    // create a stripe subscription
-    const subscription = await stripe.subscriptions.create({
-      customer: customer.id,
-      items: [
-        {
-          plan: priceId,
+    const user = await User.findOne({ email });
+    if (user.subscriptionId != "") {
+      res.status(406).json({
+        success: false,
+        message: "you already have subscription",
+      });
+    } else {
+      // create customer
+      const customer = await stripe.customers.create({
+        name: name,
+        email: email,
+        payment_method: paymentMethod,
+        invoice_settings: {
+          default_payment_method: paymentMethod,
         },
-      ],
+      });
 
-      payment_settings: {
-        payment_method_options: {
-          card: {
-            request_three_d_secure: "any",
+      // console.log("customer: ", customer);
+      console.log(name, email, paymentMethod, priceId);
+
+      // create a stripe subscription
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [
+          {
+            plan: priceId,
           },
+        ],
+
+        payment_settings: {
+          payment_method_options: {
+            card: {
+              request_three_d_secure: "any",
+            },
+          },
+          payment_method_types: ["card"],
+          save_default_payment_method: "on_subscription",
         },
-        payment_method_types: ["card"],
-        save_default_payment_method: "on_subscription",
-      },
-      expand: ["latest_invoice.payment_intent"],
-    });
+        expand: ["latest_invoice.payment_intent"],
+      });
 
-    // console.log("subscription: ", subscription);
-    res.status(200).json({
-      clientSecret: subscription.latest_invoice.payment_intent.client_secret,
-      subscriptionId: subscription.id,
-    });
+      // console.log("subscription: ", subscription);
+      res.status(200).json({
+        clientSecret: subscription.latest_invoice.payment_intent.client_secret,
+        subscriptionId: subscription.id,
+      });
 
-    // return the client secret and subscription id
-    return {
-      clientSecret: subscription.latest_invoice.payment_intent.client_secret,
-      subscriptionId: subscription.id,
-    };
+      // return the client secret and subscription id
+      return {
+        clientSecret: subscription.latest_invoice.payment_intent.client_secret,
+        subscriptionId: subscription.id,
+      };
+    }
   } catch (error) {
     console.log(error);
     res.status(400).json({ error });
@@ -67,7 +76,34 @@ const getPublishableKey = async (req, res) => {
   }
 };
 
+// cancelSubscription:
+const cancelSubscription = async (req, res) => {
+  try {
+    const { subscriptionId } = req.body;
+    const user = await User.findOne({ subscriptionId });
+
+    if (!user) {
+      res.status(500).send({
+        success: false,
+      });
+    } else {
+      const deleted = await stripe.subscriptions.del(subscriptionId);
+      user.subscriptionId = "";
+      await user.save(); // save changes to the User document
+      res.status(200).send({
+        success: true,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
+
 module.exports = {
   createSubscription,
   getPublishableKey,
+  cancelSubscription,
 };
+
+// sub_1MuMO0H5DTXndbM5mRHbybUg

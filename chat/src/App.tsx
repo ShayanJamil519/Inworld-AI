@@ -45,6 +45,8 @@ function App() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [chatHistory, setChatHistory] = useState<HistoryItem[]>([]);
   const [chatting, setChatting] = useState(false);
+  const [audio, setAudio] = useState(true);
+
   const [playerName, setPlayerName] = useState("");
 
   const stateRef = useRef<CurrentContext>();
@@ -109,6 +111,15 @@ function App() {
     setCharacters([]);
   }, [connection]);
 
+
+  const stopAudio = useCallback(async () => {
+
+    setAudio(!audio);
+    connection?.player?.mute(audio)
+
+
+  }, [connection,audio]);
+
   const resetForm = useCallback(() => {
     formMethods.reset({
       ...defaults.configuration,
@@ -147,6 +158,7 @@ function App() {
           connection={connection!}
           playerName={playerName}
           onStopChatting={stopChatting}
+          onStopAudio= {stopAudio}
         />
       ) : (
         "Loading..."

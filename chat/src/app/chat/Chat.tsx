@@ -2,9 +2,11 @@ import {
   CopyAll,
   Mic,
   Send,
+  VolumeUp,
+  VolumeOff
 } from '@mui/icons-material';
 import { Button, Grid, IconButton, InputAdornment, TextField } from '@mui/material';
-import { Character, CHAT_HISTORY_TYPE, HistoryItem, InworldConnectionService } from '@inworld/web-sdk';
+import { Character, CHAT_HISTORY_TYPE, HistoryItem, InworldConnectionService  } from '@inworld/web-sdk';
 
 import { History } from './History';
 import { useCallback, useEffect, useState } from 'react';
@@ -20,6 +22,8 @@ interface ChatProps {
   connection: InworldConnectionService;
   playerName: string;
   onStopChatting: () => void;
+  onStopAudio: () => void;
+
 }
 
 interface fetchData {
@@ -32,12 +36,14 @@ export function Chat(props: ChatProps) {
     connection,
     playerName,
     onStopChatting,
+    onStopAudio
   } = props;
 
   const [text, setText] = useState('');
   const [copyDestination, setCopyDestination] = useState('');
   const [copyConfirmOpen, setCopyConfirmOpen] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [isaudio, setIsAudio] = useState(true);
   const [hasPlayedWorkaroundSound, setHasPlayedWorkaroundSound] = useState(false);
   const search = useLocation().search;
   const email = new URLSearchParams(search).get("email");
@@ -47,7 +53,7 @@ export function Chat(props: ChatProps) {
   }, []);
 
   async function fetchData() : Promise<Number> {
-    var result=3;
+    var result=10;
     console.log(email)
     const {data} = await axios.get(
       `http://localhost:4000/payment/package/${email}`
@@ -56,7 +62,7 @@ export function Chat(props: ChatProps) {
       const {data} = await axios.get(
         `http://localhost:4000/api/user/limit`)
         if (data.message=="nice"){
-          console.log("Working Great")
+          console.log("Working Great h")
           result = 1;
         }
     }
@@ -186,7 +192,7 @@ export function Chat(props: ChatProps) {
   async function asyncHandleSendData() {
     if (text) {
       var result =await fetchData();
-      if(result==1){
+      if(result==1 || result ==2 || result ==3){
       console.log("succ");
       !hasPlayedWorkaroundSound && playWorkaroundSound();
       connection?.sendText(text);
@@ -231,6 +237,16 @@ export function Chat(props: ChatProps) {
     playWorkaroundSound,
     startRecording,
     stopRecording,
+  ]);
+
+  const handleAudioClick = useCallback(async () => { 
+
+
+    setIsAudio(!isaudio)
+    return onStopAudio()
+  
+  }, [
+    isaudio,
   ]);
 
   return (
@@ -290,6 +306,13 @@ export function Chat(props: ChatProps) {
               sx={{ height: '3rem', width: '3rem', backgroundColor: '#F1F5F9' }}
             >
               {isRecording ? <RecordIcon /> : <Mic />}
+            </IconButton>
+            <IconButton
+              onClick={handleAudioClick}
+              sx={{ height: '3rem', width: '3rem', backgroundColor: '#F1F5F9' }}
+            >
+              {isaudio ? <VolumeUp/> : <VolumeOff />}
+              
             </IconButton>
           </Stack>
         </Grid>

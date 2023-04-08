@@ -76,6 +76,19 @@ const getPublishableKey = async (req, res) => {
   }
 };
 
+// get character and scene name on the frontend
+const getNames = async (req, res) => {
+  try {
+    res.send({
+      characterName: process.env.characterName,
+      sceneName:process.env.sceneName
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
+
 // cancelSubscription:
 const cancelSubscription = async (req, res) => {
   try {
@@ -104,6 +117,7 @@ module.exports = {
   createSubscription,
   getPublishableKey,
   cancelSubscription,
+  getNames
 };
 
 // sub_1MuMO0H5DTXndbM5mRHbybUg

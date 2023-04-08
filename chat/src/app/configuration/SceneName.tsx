@@ -4,8 +4,9 @@ import { useFormContext } from 'react-hook-form';
 import { Configuration } from '../types';
 import { save as saveConfiguration } from '../helpers/configuration';
 import { useCallback } from 'react';
+import { Data } from './ConfigView';
 
-export const SceneName = () => {
+export const SceneName = (props:{data:Data}) => {
   const { getValues, register } = useFormContext<Configuration>();
 
   const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,11 +23,9 @@ export const SceneName = () => {
         id="scene-name"
         size="small"
         label="Scene Name"
-        placeholder="Enter scene name"
+        value={props.data.sceneName}
         InputLabelProps={{ shrink: true }}
-        {
-          ...register('scene.name', { required: true })
-        }
+        disabled
         onChange={onChange}
       />
     </Box>

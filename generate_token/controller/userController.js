@@ -45,10 +45,25 @@ updateUserPackage = async (req, res) => {
   });
 };
 
+// update user package
+getUserDetail = async (req, res) => {
+  const user = await User.findOne({ email: req.params.email });
+  if (!user) {
+    res.status(404).json({
+      message: "user not found with this email",
+    });
+  } else {
+    res.status(200).json({
+      user,
+    });
+  }
+};
+
 module.exports = {
   getPackageOfUser,
   LimitRequest,
   updateUserPackage,
+  getUserDetail,
 };
 
 // mraza6601@gmail.com

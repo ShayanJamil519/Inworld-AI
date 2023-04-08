@@ -53,7 +53,7 @@ export function Chat(props: ChatProps) {
   }, []);
 
   async function fetchData() : Promise<Number> {
-    var result=3;
+    var result=10;
     console.log(email)
     const {data} = await axios.get(
       `http://localhost:4000/payment/package/${email}`
@@ -62,7 +62,7 @@ export function Chat(props: ChatProps) {
       const {data} = await axios.get(
         `http://localhost:4000/api/user/limit`)
         if (data.message=="nice"){
-          console.log("Working Great")
+          console.log("Working Great h")
           result = 1;
         }
     }
@@ -192,7 +192,7 @@ export function Chat(props: ChatProps) {
   async function asyncHandleSendData() {
     if (text) {
       var result =await fetchData();
-      if(result==1){
+      if(result==1 || result ==2 || result ==3){
       console.log("succ");
       !hasPlayedWorkaroundSound && playWorkaroundSound();
       connection?.sendText(text);

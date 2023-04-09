@@ -1,19 +1,27 @@
+import { CopyAll, Mic, Send, VolumeUp, VolumeOff } from "@mui/icons-material";
+import Carousel from "react-material-ui-carousel";
 import {
-  CopyAll,
-  Mic,
-  Send,
-  VolumeUp,
-  VolumeOff
-} from '@mui/icons-material';
-import { Button, Grid, IconButton, InputAdornment, TextField } from '@mui/material';
-import { Character, CHAT_HISTORY_TYPE, HistoryItem, InworldConnectionService  } from '@inworld/web-sdk';
+  Button,
+  Grid,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Container,
+  Box,
+} from "@mui/material";
+import {
+  Character,
+  CHAT_HISTORY_TYPE,
+  HistoryItem,
+  InworldConnectionService,
+} from "@inworld/web-sdk";
 
-import { History } from './History';
-import { useCallback, useEffect, useState } from 'react';
-import { Stack } from '@mui/system';
-import { CopyConfirmedDialog } from './CopyConfirmedDialog';
-import { RecordIcon } from './Chat.styled';
-import { useLocation , useNavigate } from "react-router-dom";
+import { History } from "./History";
+import { useCallback, useEffect, useState } from "react";
+import { Stack } from "@mui/system";
+import { CopyConfirmedDialog } from "./CopyConfirmedDialog";
+import { RecordIcon } from "./Chat.styled";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios, { AxiosPromise } from "axios";
 
 interface ChatProps {
@@ -23,11 +31,10 @@ interface ChatProps {
   playerName: string;
   onStopChatting: () => void;
   onStopAudio: () => void;
-
 }
 
 interface fetchData {
-    (): Promise<Number>;
+  (): Promise<Number>;
 }
 export function Chat(props: ChatProps) {
   const {
@@ -36,64 +43,69 @@ export function Chat(props: ChatProps) {
     connection,
     playerName,
     onStopChatting,
-    onStopAudio
+    onStopAudio,
   } = props;
 
-  const [text, setText] = useState('');
-  const [copyDestination, setCopyDestination] = useState('');
+  const [text, setText] = useState("");
+  const [copyDestination, setCopyDestination] = useState("");
   const [copyConfirmOpen, setCopyConfirmOpen] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isaudio, setIsAudio] = useState(true);
-  const [hasPlayedWorkaroundSound, setHasPlayedWorkaroundSound] = useState(false);
+  const [images, setImages] = useState([]);
+  const [hasPlayedWorkaroundSound, setHasPlayedWorkaroundSound] =
+    useState(false);
   const search = useLocation().search;
   const email = new URLSearchParams(search).get("email");
   const navigate = useNavigate();
 
-  const handleTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
-  }, []);
+  const handleTextChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setText(e.target.value);
+    },
+    []
+  );
 
   function paymentPage() {
     navigate(`/payment/${email}`);
   }
 
-  async function fetchData() : Promise<Number> {
-    var result=10;
-    console.log(email)
-    const {data} = await axios.get(
+  async function fetchData(): Promise<Number> {
+    var result = 10;
+    console.log(email);
+    const { data } = await axios.get(
       `http://localhost:4000/payment/package/${email}`
     );
-    if(data.package==0){
-      const {data} = await axios.get(
-        `http://localhost:4000/api/user/limit`)
-        if (data.message=="nice"){
-          console.log("Working Great h")
-          result = 1;
-        }
+    if (data.package == 0) {
+      const { data } = await axios.get(`http://localhost:4000/api/user/limit`);
+      if (data.message == "nice") {
+        console.log("Working Great h");
+        result = 1;
+      }
     }
-    if(data.package==1){
-      const {data} = await axios.get(
-        `http://localhost:4000/api/standarduser/limit`)
-        if (data.message=="nice"){
-          console.log("Working Great")
-          result = 2;
-        }
+    if (data.package == 1) {
+      const { data } = await axios.get(
+        `http://localhost:4000/api/standarduser/limit`
+      );
+      if (data.message == "nice") {
+        console.log("Working Great");
+        result = 2;
+      }
     }
-    if(data.package==2){
-      const {data} = await axios.get(
-        `http://localhost:4000/api/premiumuser/limit`)
-        if (data.message=="nice"){
-          console.log("Working Great")
-          result = 3;
-        }
+    if (data.package == 2) {
+      const { data } = await axios.get(
+        `http://localhost:4000/api/premiumuser/limit`
+      );
+      if (data.message == "nice") {
+        console.log("Working Great");
+        result = 3;
+      }
     }
     return result;
-
   }
 
   const formatTranscript = useCallback(
     (messages: HistoryItem[]) => {
-      let transcript = '';
+      let transcript = "";
       let characterLastSpeaking = false; // Used to combine all Character text chunks
 
       messages.forEach((item) => {
@@ -104,27 +116,24 @@ export function Chat(props: ChatProps) {
               ? item.character?.getDisplayName()
               : playerName;
 
-            transcript += characterLastSpeaking && isCharacter
-              ? item.text
-              : `\n${givenName}: ${item.text}`;
-            characterLastSpeaking = isCharacter
+            transcript +=
+              characterLastSpeaking && isCharacter
+                ? item.text
+                : `\n${givenName}: ${item.text}`;
+            characterLastSpeaking = isCharacter;
             break;
         }
       });
 
       return transcript;
     },
-    [playerName],
+    [playerName]
   );
 
   const getTranscript = useCallback(
-    (
-      messages: HistoryItem[],
-      startId?: string,
-      endId?: string,
-    ) => {
+    (messages: HistoryItem[], startId?: string, endId?: string) => {
       if (!messages.length) {
-        return '';
+        return "";
       }
 
       // get full array by default
@@ -151,11 +160,9 @@ export function Chat(props: ChatProps) {
       }
 
       // generate eventual transcript
-      return formatTranscript(
-        messages.slice(startIndex, endIndex + 1)
-      );
+      return formatTranscript(messages.slice(startIndex, endIndex + 1));
     },
-    [formatTranscript],
+    [formatTranscript]
   );
 
   const handleCopyClick = useCallback(async () => {
@@ -163,10 +170,10 @@ export function Chat(props: ChatProps) {
 
     if (navigator.clipboard) {
       navigator.clipboard.writeText(history).then(() => {
-        setCopyDestination('clipboard');
+        setCopyDestination("clipboard");
       });
     } else {
-      setCopyDestination('console');
+      setCopyDestination("console");
     }
 
     setCopyConfirmOpen(true);
@@ -196,29 +203,27 @@ export function Chat(props: ChatProps) {
 
   async function asyncHandleSendData() {
     if (text) {
-      var result =await fetchData();
-      if(result==1 || result ==2 || result ==3){
-      console.log("succ");
-      !hasPlayedWorkaroundSound && playWorkaroundSound();
-      connection?.sendText(text);
-      setText('');
+      var result = await fetchData();
+      if (result == 1 || result == 2 || result == 3) {
+        console.log("succ");
+        !hasPlayedWorkaroundSound && playWorkaroundSound();
+        connection?.sendText(text);
+        setText("");
       }
     }
   }
 
-
-
-  const handleSpeakClick = useCallback(async () => { 
-    var result =await fetchData();
-      if(result==1 || result ==2 || result ==3){
-    !hasPlayedWorkaroundSound && playWorkaroundSound();
-    if (isRecording) {
-      stopRecording();
-      connection.sendAudioSessionEnd();
-      setIsRecording(false);
-      return;
+  const handleSpeakClick = useCallback(async () => {
+    var result = await fetchData();
+    if (result == 1 || result == 2 || result == 3) {
+      !hasPlayedWorkaroundSound && playWorkaroundSound();
+      if (isRecording) {
+        stopRecording();
+        connection.sendAudioSessionEnd();
+        setIsRecording(false);
+        return;
+      }
     }
-  }
 
     return startRecording();
   }, [
@@ -230,33 +235,50 @@ export function Chat(props: ChatProps) {
     stopRecording,
   ]);
 
-  const handleAudioClick = useCallback(async () => { 
+  const handleAudioClick = useCallback(async () => {
+    setIsAudio(!isaudio);
+    return onStopAudio();
+  }, [isaudio]);
 
+  // const fadeImages = [
+  //   {
+  //     url: "https://images.unsplash.com/photo-1509721434272-b79147e0e708?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
+  //   },
+  //   {
+  //     url: "https://images.unsplash.com/photo-1506710507565-203b9f24669b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1536&q=80",
+  //   },
+  //   {
+  //     url: "https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
+  //   },
+  // ];
 
-    setIsAudio(!isaudio)
-    return onStopAudio()
-  
-  }, [
-    isaudio,
-  ]);
+  const [fadeImages, setFadeImages] = useState([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await axios.get(`http://localhost:4000/api/img/all`);
+      const images = data.images[0].images.map((image: any) => ({
+        url: image.url,
+      }));
+      setFadeImages(images);
+    };
+    fetchData();
+  }, []);
   return (
     <>
-      <Grid
-        container
-        sx={{ mb: 2, mt: 10 }}
-      >
+      <Grid container sx={{ mb: 2, mt: 10 }}>
         <Grid
           item
           xs={12}
           sm={6}
           sx={{
-            backgroundColor: 'white',
-            padding: '0.5rem 1.5rem',
-            borderRadius: '1rem',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
+            backgroundColor: "white",
+            padding: "0.5rem 1.5rem",
+
+            borderRadius: "1rem",
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           <History
@@ -264,7 +286,7 @@ export function Chat(props: ChatProps) {
             character={character}
             playerName={playerName}
           />
-          <Stack direction="row-reverse" sx={{ mb: '1' }}>
+          <Stack direction="row-reverse" sx={{ mb: "1" }}>
             <IconButton onClick={handleCopyClick}>
               <CopyAll fontSize="small" />
             </IconButton>
@@ -277,8 +299,9 @@ export function Chat(props: ChatProps) {
               onChange={handleTextChange}
               sx={{
                 backgroundColor: (theme) => theme.palette.grey[100],
-                borderRadius: '1rem',
-                padding: '1rem',
+                borderRadius: "1rem",
+                padding: "1rem",
+                // width: "auto",
               }}
               InputProps={{
                 endAdornment: (
@@ -293,37 +316,79 @@ export function Chat(props: ChatProps) {
             />
             <IconButton
               onClick={handleSpeakClick}
-              sx={{ height: '3rem', width: '3rem', backgroundColor: '#F1F5F9' }}
+              sx={{
+                height: "3rem",
+                width: "3rem",
+                backgroundColor: "#F1F5F9",
+              }}
             >
               {isRecording ? <RecordIcon /> : <Mic />}
             </IconButton>
             <IconButton
               onClick={handleAudioClick}
-              sx={{ height: '3rem', width: '3rem', backgroundColor: '#F1F5F9' }}
+              sx={{
+                height: "3rem",
+                width: "3rem",
+                backgroundColor: "#F1F5F9",
+              }}
             >
-              {isaudio ? <VolumeUp/> : <VolumeOff />}
-              
+              {isaudio ? <VolumeUp /> : <VolumeOff />}
             </IconButton>
           </Stack>
         </Grid>
-        <Grid item xs={12} sm={1}/>
+
+        <Grid item xs={12} sm={1} />
         <Grid
           item
           xs={12}
           sm={5}
           sx={{
-            backgroundColor: 'white',
-            padding: '0.5rem 1.5rem',
-            borderRadius: '1rem',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
+            backgroundColor: "white",
+            padding: "0.5rem 1.5rem",
+            borderRadius: "1rem",
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
           }}
-          >
+        >
           <img
             alt={character.getDisplayName()}
             src={character.getAssets().rpmImageUriPortrait}
           />
+
+          <Carousel>
+            {/* {fadeImages &&
+              fadeImages.map((item, i) => (
+                <img
+                  // className="CarouselImage"
+                  style={{ width: "500px", height: "500px" }}
+                  key={i}
+                  src={item.url}
+                  alt={`${i} Slide`}
+                />
+              ))} */}
+            {fadeImages &&
+              fadeImages.map((item: any, i) => (
+                <div
+                  style={{
+                    width: "500px",
+                    height: "500px",
+                    backgroundColor: "yellow",
+                  }}
+                >
+                  <img
+                    style={{
+                      objectFit: "cover",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    key={i}
+                    src={item.url}
+                    alt={`${i} Slide`}
+                  />
+                </div>
+              ))}
+          </Carousel>
         </Grid>
       </Grid>
       <Grid
@@ -331,21 +396,15 @@ export function Chat(props: ChatProps) {
         mt={1}
         spacing={2}
         alignItems="center"
-        justifyContent={'flex-start'}
+        justifyContent={"flex-start"}
       >
         <Grid item>
-          <Button
-            variant="outlined"
-            onClick={onStopChatting}
-          >
+          <Button variant="outlined" onClick={onStopChatting}>
             Back to settings
           </Button>
         </Grid>
         <Grid item>
-          <Button
-            variant="outlined"
-            onClick={paymentPage}
-          >
+          <Button variant="outlined" onClick={paymentPage}>
             Donation
           </Button>
         </Grid>
@@ -358,3 +417,5 @@ export function Chat(props: ChatProps) {
     </>
   );
 }
+
+// marginRight: "230px",

@@ -1,10 +1,19 @@
-import { Character, CHAT_HISTORY_TYPE, HistoryItem, HistoryItemActor, HistoryItemTriggerEvent } from '@inworld/web-sdk';
-import { Fade } from '@mui/material';
-import { Box } from '@mui/system';
-import { useEffect, useRef, useState } from 'react';
-import { dateWithMilliseconds } from '../helpers/transform';
-import { HistoryStyled } from './Chat.styled';
-import { Typing } from './Typing';
+import {
+  Character,
+  CHAT_HISTORY_TYPE,
+  HistoryItem,
+  HistoryItemActor,
+  HistoryItemTriggerEvent,
+} from "@inworld/web-sdk";
+import { Fade } from "@mui/material";
+import { Box } from "@mui/system";
+import { useEffect, useRef, useState } from "react";
+import { dateWithMilliseconds } from "../helpers/transform";
+import { HistoryStyled } from "./Chat.styled";
+import { Typing } from "./Typing";
+import { useMediaQuery } from "@mui/material";
+// import { useMediaQuery } from "@mui/material";
+// import type { Theme } from "@mui/material/styles";
 
 interface HistoryProps {
   character: Character;
@@ -30,7 +39,7 @@ export const History = (props: HistoryProps) => {
     if (ref.current && history) {
       ref.current.scrollTo({
         top: ref.current.scrollHeight,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     }
   }, [history]);
@@ -39,21 +48,22 @@ export const History = (props: HistoryProps) => {
     let currentRecord: CombinedHistoryActorItem | undefined;
     const mergedRecords: CombinedHistoryItem[] = [];
     const hasActors = history.find(
-      (record: HistoryItem) => record.type === CHAT_HISTORY_TYPE.ACTOR,
+      (record: HistoryItem) => record.type === CHAT_HISTORY_TYPE.ACTOR
     );
     const withoutTriggerEvents = history.filter(
-      (record: HistoryItem) => record.type !== CHAT_HISTORY_TYPE.TRIGGER_EVENT,
+      (record: HistoryItem) => record.type !== CHAT_HISTORY_TYPE.TRIGGER_EVENT
     );
 
     for (let i = 0; i < history.length; i++) {
       let item = history[i];
       switch (item.type) {
         case CHAT_HISTORY_TYPE.ACTOR:
-          currentRecord = mergedRecords.find(r =>
-            r.type === CHAT_HISTORY_TYPE.ACTOR &&
-            item.type === CHAT_HISTORY_TYPE.ACTOR &&
-            r.source.name === item.source.name &&
-            r.interactionId === item.interactionId
+          currentRecord = mergedRecords.find(
+            (r) =>
+              r.type === CHAT_HISTORY_TYPE.ACTOR &&
+              item.type === CHAT_HISTORY_TYPE.ACTOR &&
+              r.source.name === item.source.name &&
+              r.interactionId === item.interactionId
           ) as CombinedHistoryActorItem;
 
           if (currentRecord) {
@@ -78,25 +88,29 @@ export const History = (props: HistoryProps) => {
     const lastInteractionId =
       withoutTriggerEvents[withoutTriggerEvents.length - 1]?.interactionId;
 
-    const interactionEnd = withoutTriggerEvents.find(event =>
-      event.interactionId === lastInteractionId &&
-      event.type === CHAT_HISTORY_TYPE.INTERACTION_END
+    const interactionEnd = withoutTriggerEvents.find(
+      (event) =>
+        event.interactionId === lastInteractionId &&
+        event.type === CHAT_HISTORY_TYPE.INTERACTION_END
     );
 
-    setIsInteractionEnd(
-      !hasActors || (!!currentRecord && !!interactionEnd));
+    setIsInteractionEnd(!hasActors || (!!currentRecord && !!interactionEnd));
 
     setCombinedChatHistory(mergedRecords);
   }, [history]);
+
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   return (
     <HistoryStyled ref={ref}>
       {combinedChatHistory.map((item, index) => {
         let text;
         let author;
-          const title = item.type === CHAT_HISTORY_TYPE.ACTOR || item.type === CHAT_HISTORY_TYPE.TRIGGER_EVENT
+        const title =
+          item.type === CHAT_HISTORY_TYPE.ACTOR ||
+          item.type === CHAT_HISTORY_TYPE.TRIGGER_EVENT
             ? `${dateWithMilliseconds(item.date)} (${item.interactionId})`
-            : '';
+            : "";
 
         switch (item.type) {
           case CHAT_HISTORY_TYPE.ACTOR:
@@ -114,14 +128,19 @@ export const History = (props: HistoryProps) => {
             title={title}
             key={index}
             data-id={item.id}
+            // marginRight={isMobile ? "240px" : "0px"}
+            width={isMobile ? "50%" : "100%"}
             sx={{
-              ...author && { textAlign: 'left' }
+              ...(author && { textAlign: "left" }),
             }}
-          >{
-            author
-              ? <><strong>{author}</strong>: {text}</>
-              : text
-          }
+          >
+            {author ? (
+              <>
+                <strong>{author}</strong>: {text}
+              </>
+            ) : (
+              text
+            )}
           </Box>
         );
       })}

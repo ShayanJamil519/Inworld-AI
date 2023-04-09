@@ -89,6 +89,23 @@ const getNames = async (req, res) => {
   }
 };
 
+
+// get limits and rates of free , standard , premium packages
+const getLimits = async (req, res) => {
+  try {
+    res.send({
+      freeLimit:process.env.FREE_API_LIMIT ,
+      standardLimit : process.env.STANDARD_API_LIMIT,
+      premiumLimit : process.env.PREMIUM_API_LIMIT,
+      standardCharges : process.env.STANDARD_API_CHARGES,
+      premiumCharges :process.env.PREMIUM_API_CHARGES 
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
+
 // cancelSubscription:
 const cancelSubscription = async (req, res) => {
   try {
@@ -117,7 +134,8 @@ module.exports = {
   createSubscription,
   getPublishableKey,
   cancelSubscription,
-  getNames
+  getNames,
+  getLimits
 };
 
 // sub_1MuMO0H5DTXndbM5mRHbybUg

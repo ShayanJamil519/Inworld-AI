@@ -4,6 +4,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Payment = () => {
+  const [freeLimit, setfreeLimit] = useState('');
+  const [standardLimit, setstandardLimit] = useState('');
+  const [premiumLimit, setpremiumLimit] = useState('');
+  const [standardCharges, setstandardCharges] = useState('');
+  const [premiumCharges, setpremiumCharges] = useState('');
   const navigate = useNavigate();
   const [user, setUser] = useState({});
   const [packageName, setPackageName] = useState("");
@@ -51,6 +56,18 @@ const Payment = () => {
         console.log(res.data.user);
         setUser({ ...res.data.user });
       });
+      axios
+      .get(
+        `http://localhost:4000/payment/limits`
+      )
+
+      .then((res) => {
+        setfreeLimit(res.data.freeLimit)
+        setstandardLimit(res.data.standardLimit)
+        setpremiumLimit(res.data.premiumLimit)
+        setstandardCharges(res.data.standardCharges)
+        setpremiumCharges(res.data.premiumCharges)
+      });
     if (user.package == "0") {
       setPackageName("Free Package");
     } else if (user.package == "1") {
@@ -70,16 +87,16 @@ const Payment = () => {
           <h1>Free</h1>
           <div className="plan">
             <h3>API Rate Limit:</h3>
-            <h2>10</h2>
+            <h2>{freeLimit}</h2>
           </div>
-          <button>Choose</button>
+          <button >Choose</button>
         </div>
         <div className="payment__card">
           <h2>STANDARD</h2>
-          <h1>$5</h1>
+          <h1>${standardCharges}</h1>
           <div className="plan">
             <h3>API Rate Limit:</h3>
-            <h2>20</h2>
+            <h2>{standardLimit}</h2>
           </div>
           <button onClick={() => handleClick("price_1MtId7H5DTXndbM5S6011iYS")}>
             Choose
@@ -87,10 +104,10 @@ const Payment = () => {
         </div>
         <div className="payment__card">
           <h2>Premium</h2>
-          <h1>$10</h1>
+          <h1>$ {premiumCharges}</h1>
           <div className="plan">
             <h3>API Rate Limit:</h3>
-            <h2>30</h2>
+            <h2>{premiumLimit}</h2>
           </div>
           <button onClick={() => handleClick("price_1MtId7H5DTXndbM57B16ve7p")}>
             Choose

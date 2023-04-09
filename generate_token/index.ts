@@ -49,11 +49,7 @@ cloudinary.config({
   api_secret: process.env.APISecret,
 });
 
-/*app.use(cookieSession({
-  name: 'google-auth-session',
-  keys: ['key1', 'key2'],
-  maxAge: 24 * 60 * 60 * 1000 // 24 hours
-}))*/
+
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -73,7 +69,7 @@ app.use("/payment", paymentRoutes);
 
 const freeLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 2,
+  max: process.env.FREE_API_LIMIT,
   standardHeaders: true,
   legacyHeaders: false,
   message: "gi",
@@ -89,7 +85,7 @@ app.use("/api/img", img);
 
 const standardLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 6,
+  max: process.env.STANDARD_API_LIMIT,
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -99,7 +95,7 @@ app.use("/api/standarduser", standardLimiter, standardUser);
 
 const PremiumLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 7,
+  max: process.env.PREMIUM_API_LIMIT,
   standardHeaders: true,
   legacyHeaders: false,
 });

@@ -44,7 +44,7 @@ const Payment = () => {
   useEffect(() => {
     axios
       .get(
-        `http://localhost:4000/api/user/get/muhammadabdullahimdad10@gmail.com`
+        `http://localhost:4000/payment/package/get/muhammadabdullahimdad10@gmail.com`
       )
       .then((res) => {
         console.log(res);

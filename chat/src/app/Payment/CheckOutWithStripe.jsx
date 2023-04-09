@@ -99,7 +99,7 @@ const CheckOut = () => {
           let config = {
             method: "put",
             maxBodyLength: Infinity,
-            url: `http://localhost:4000/api/user/update/${email}`,
+            url: `http://localhost:4000/payment/package/update/${email}`,
             headers: {
               "Content-Type": "application/json",
             },

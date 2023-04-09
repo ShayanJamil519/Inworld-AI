@@ -13,7 +13,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Stack } from '@mui/system';
 import { CopyConfirmedDialog } from './CopyConfirmedDialog';
 import { RecordIcon } from './Chat.styled';
-import { useLocation } from "react-router-dom";
+import { useLocation , useNavigate } from "react-router-dom";
 import axios, { AxiosPromise } from "axios";
 
 interface ChatProps {
@@ -47,10 +47,15 @@ export function Chat(props: ChatProps) {
   const [hasPlayedWorkaroundSound, setHasPlayedWorkaroundSound] = useState(false);
   const search = useLocation().search;
   const email = new URLSearchParams(search).get("email");
+  const navigate = useNavigate();
 
   const handleTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   }, []);
+
+  function paymentPage() {
+    navigate(`/payment/${email}`);
+  }
 
   async function fetchData() : Promise<Number> {
     var result=10;
@@ -334,6 +339,14 @@ export function Chat(props: ChatProps) {
             onClick={onStopChatting}
           >
             Back to settings
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="outlined"
+            onClick={paymentPage}
+          >
+            Donation
           </Button>
         </Grid>
       </Grid>

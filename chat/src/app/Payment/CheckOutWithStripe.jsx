@@ -14,10 +14,11 @@ import { MdVpnLock } from "react-icons/md";
 import { GrMail } from "react-icons/gr";
 import { MdAccountCircle } from "react-icons/md";
 import "./Payment.css";
-import { useParams } from "react-router-dom";
+import { useParams , useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const CheckOut = () => {
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [secret, setSecret] = useState("");
@@ -29,6 +30,7 @@ const CheckOut = () => {
 
   const stripe = useStripe();
   const elements = useElements();
+  const navigate = useNavigate();
   const { priceId } = useParams();
 
   const submitHandler = async (e) => {
@@ -113,6 +115,7 @@ const CheckOut = () => {
             .request(config)
             .then((response) => {
               console.log(JSON.stringify(response.data));
+
             })
             .catch((error) => {
               console.log(error);

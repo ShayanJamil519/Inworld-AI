@@ -119,6 +119,7 @@ const cancelSubscription = async (req, res) => {
     } else {
       const deleted = await stripe.subscriptions.del(subscriptionId);
       user.subscriptionId = "";
+      user.package ="0";
       await user.save(); // save changes to the User document
       res.status(200).send({
         success: true,

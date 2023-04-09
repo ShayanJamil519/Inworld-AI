@@ -139,15 +139,6 @@ function App() {
     setInitialized(true);
   }, [formMethods]);
 
-  // useEffect(() => {
-  //   fetch("http://localhost:4000/payment/get-publishableKey").then(
-  //     async (r) => {
-  //       const { publishableKey } = await r.json();
-  //       setPublishKey(publishableKey);
-  //       // console.log(publishableKey);
-  //     }
-  //   );
-  // }, []);
 
   const content = chatting ? (
     <>
@@ -174,20 +165,13 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/payment" element={<Payment />} />
+          <Route path="/payment/:email" element={<Payment />} />
           <Route path="/upload" element={<UploadImage />} />
 
           <Route
             path="/payment/checkout/:priceId"
             element={<CheckOutWithStripe />}
           />
-
-          {/* {publishKey && (
-              <Elements stripe={loadStripe(publishKey)}>
-                <Route path="/payment/checkout" element={<CheckOut />} />
-              </Elements>
-            )} */}
-
           <Route path="/chat" element={initialized ? content : ""} />
         </Routes>
       </Layout>

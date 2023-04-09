@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./Payment.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate , useParams } from "react-router-dom";
 import axios from "axios";
 
 const Payment = () => {
+  const { email } = useParams();
   const [freeLimit, setfreeLimit] = useState('');
   const [standardLimit, setstandardLimit] = useState('');
   const [premiumLimit, setpremiumLimit] = useState('');
@@ -40,6 +41,7 @@ const Payment = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
+        navigate(`/`);
       })
       .catch((error) => {
         console.log(error);
@@ -49,7 +51,7 @@ const Payment = () => {
   useEffect(() => {
     axios
       .get(
-        `http://localhost:4000/payment/package/get/muhammadabdullahimdad10@gmail.com`
+        `http://localhost:4000/payment/package/get/${email}`
       )
       .then((res) => {
         console.log(res);

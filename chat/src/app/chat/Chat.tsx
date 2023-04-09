@@ -201,33 +201,19 @@ export function Chat(props: ChatProps) {
     }
   }
 
-  const handleSend = useCallback(() => {
-    if (text) {
-      
-      !hasPlayedWorkaroundSound && playWorkaroundSound();
 
-      connection?.sendText(text);
-
-      setText('');
-      
-    }
-  }, [connection, hasPlayedWorkaroundSound, playWorkaroundSound, text]);
-
-  const handleTextKeyPress = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSend();
-    }
-  }, [handleSend]);
 
   const handleSpeakClick = useCallback(async () => { 
+    var result =await fetchData();
+      if(result==1 || result ==2 || result ==3){
     !hasPlayedWorkaroundSound && playWorkaroundSound();
-
     if (isRecording) {
       stopRecording();
       connection.sendAudioSessionEnd();
       setIsRecording(false);
       return;
     }
+  }
 
     return startRecording();
   }, [
@@ -284,7 +270,6 @@ export function Chat(props: ChatProps) {
               fullWidth
               value={text}
               onChange={handleTextChange}
-              onKeyPress={handleTextKeyPress}
               sx={{
                 backgroundColor: (theme) => theme.palette.grey[100],
                 borderRadius: '1rem',

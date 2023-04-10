@@ -77,13 +77,7 @@ export const ConfigView = (props: ConfigViewProps) => {
         justifyContent={'flex-end'}
       >
         <Grid item>
-          <Button
-            sx={{ mr: 2 }}
-            variant="contained"
-            onClick={props.onResetForm}
-          >
-            Reset
-          </Button>
+          
           <Button
             variant="contained"
             onClick={props.onStart}

@@ -90,6 +90,19 @@
   background-color: #1919ff;
 }
 
+.back{
+  font-size: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 12px 0;
+  width: 90%;
+  margin: 30px auto 20px auto;
+  border-radius: 15px;
+  color: white;
+  border: none;
+  background-color: #1919ff;
+}
+
 .my__package {
   width: 100%;
   align-items: center;

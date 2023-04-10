@@ -16,11 +16,12 @@ import { MdAccountCircle } from "react-icons/md";
 import "./Payment.css";
 import { useParams , useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const CheckOut = () => {
 
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  //const [email, setEmail] = useState("");
   const [secret, setSecret] = useState("");
   const [subscription, setSubscription] = useState("");
 
@@ -31,7 +32,11 @@ const CheckOut = () => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
-  const { priceId } = useParams();
+  const { priceId , email } = useParams();
+
+  function backtochat() {
+    navigate(`/chat/${email}`);
+  }
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -77,7 +82,6 @@ const CheckOut = () => {
 
       console.log("secret: ", secret);
       console.log("subscription: ", subscription);
-
       console.log("response: ", response);
 
       if (response.clientSecret) {
@@ -115,14 +119,20 @@ const CheckOut = () => {
             .request(config)
             .then((response) => {
               console.log(JSON.stringify(response.data));
+              toast.success("Payment Successfull , Now Enjoy Higher Limits");
+              navigate(`/chat/${email}`);
 
             })
             .catch((error) => {
-              console.log(error);
+              //console.log(error);
+              toast.error(error.message);
             });
         }
       } else {
-        console.log(response.message);
+        //console.log(response.message);
+        toast.success("Payment Successfull , Now Enjoy Higher Limits");
+        navigate(`/chat/${email}`);
+        
       }
     } catch (error) {
       console.log("I am catch error", error);
@@ -157,7 +167,8 @@ const CheckOut = () => {
             type="text"
             placeholder="Enter email"
             className="paymentInput"
-            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            disabled
           />
         </div>
 
@@ -180,7 +191,15 @@ const CheckOut = () => {
           // ref={payBtn}
           className="paymentFormBtn"
         />
+
       </form>
+      <button
+      onClick={backtochat} 
+      style={{ marginTop: "50px" }}
+       className="back"
+       >
+            Back To Chat
+          </button>
     </div>
   );
 };
@@ -197,34 +216,4 @@ const CheckOutWithStripe = () => (
 
 export default CheckOutWithStripe;
 
-// import React, { useState } from "react";
-// import {
-//   CardNumberElement,
-//   CardCvcElement,
-//   CardExpiryElement,
-//   useStripe,
-//   useElements,
-// } from "@stripe/react-stripe-js";
 
-// import axios from "axios";
-// import "./Payment.css";
-
-// const CheckOut = () => {
-//   const [publishKey, setPublishKey] = useState("");
-
-//   useEffect(() => {
-//     fetch("http://localhost:4000/payment/get-publishableKey").then(
-//       async (r) => {
-//         const { publishableKey } = await r.json();
-//         setPublishKey(publishableKey);
-//         // console.log(publishableKey);
-//       }
-//     );
-//   }, []);
-
-//   const stripe = useStripe();
-//   const elements = useElements();
-//   return <div>CheckOut</div>;
-// };
-
-// export default CheckOut;

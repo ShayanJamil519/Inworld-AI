@@ -1,15 +1,22 @@
 import axios from "axios";
 import React, { useState } from "react";
 import "./UploadImage.css";
+import { useNavigate , useParams } from "react-router-dom";
 
 const UploadImage = () => {
+  const { email } = useParams();
   const [image, setImage] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([]);
+  const navigate = useNavigate();
   const [customObject, updateCustomObject] = useState("customObjectTokenPay", {
     images: [],
   });
 
   const { images } = customObject;
+
+  function backtochat() {
+    navigate(`/chat/${email}`);
+  }
 
   const createProductImagesChange = (e) => {
     const files = Array.from(e.target.files);
@@ -118,7 +125,15 @@ const UploadImage = () => {
         <button onClick={handleSubmit} className="upload__button">
           Submit
         </button>
+        <button
+      onClick={backtochat} 
+      style={{ marginTop: "50px" }}
+       className="back"
+       >
+            Back To Chat
+          </button>
       </div>
+
     </div>
   );
 };

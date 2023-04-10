@@ -21,7 +21,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Stack } from "@mui/system";
 import { CopyConfirmedDialog } from "./CopyConfirmedDialog";
 import { RecordIcon } from "./Chat.styled";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import axios, { AxiosPromise } from "axios";
 
 interface ChatProps {
@@ -54,8 +55,9 @@ export function Chat(props: ChatProps) {
   const [images, setImages] = useState([]);
   const [hasPlayedWorkaroundSound, setHasPlayedWorkaroundSound] =
     useState(false);
-  const search = useLocation().search;
-  const email = new URLSearchParams(search).get("email");
+  //const search = useLocation().search;
+  //const email = new URLSearchParams(search).get("email");
+  const { email } = useParams();
   const navigate = useNavigate();
 
   const handleTextChange = useCallback(
@@ -76,11 +78,17 @@ export function Chat(props: ChatProps) {
       `http://localhost:4000/payment/package/${email}`
     );
     if (data.package == 0) {
-      const { data } = await axios.get(`http://localhost:4000/api/user/limit`);
-      if (data.message == "nice") {
-        console.log("Working Great h");
-        result = 1;
+      try{
+        const { data } = await axios.get(`http://localhost:4000/api/user/limit`);
+        if (data.message == "nice") {
+          console.log("Working Great h");
+          result = 1;
+        }
+      }catch (error) {
+        console.log("I am catch error", error);
       }
+
+
     }
     if (data.package == 1) {
       const { data } = await axios.get(
@@ -204,18 +212,22 @@ export function Chat(props: ChatProps) {
   async function asyncHandleSendData() {
     if (text) {
       var result = await fetchData();
+      console.log("res"+ result)
+      if(result==10 ){
+        console.log("here here")
+        toast.error('You have completed you api limits .Please upgrade to a Higher Package');
+      }
       if (result == 1 || result == 2 || result == 3) {
         console.log("succ");
         !hasPlayedWorkaroundSound && playWorkaroundSound();
         connection?.sendText(text);
         setText("");
-      }
+      } 
     }
   }
 
   const handleSpeakClick = useCallback(async () => {
-    var result = await fetchData();
-    if (result == 1 || result == 2 || result == 3) {
+
       !hasPlayedWorkaroundSound && playWorkaroundSound();
       if (isRecording) {
         stopRecording();
@@ -223,9 +235,14 @@ export function Chat(props: ChatProps) {
         setIsRecording(false);
         return;
       }
-    }
+      var result = await fetchData();
+      if (result == 1 || result == 2 || result == 3) {
+          return startRecording();
+      }
+      if(result==10 ){
+        toast.error('You have completed you api limits .Please upgrade to a Higher Package');
+      }
 
-    return startRecording();
   }, [
     connection,
     hasPlayedWorkaroundSound,
@@ -240,17 +257,7 @@ export function Chat(props: ChatProps) {
     return onStopAudio();
   }, [isaudio]);
 
-  // const fadeImages = [
-  //   {
-  //     url: "https://images.unsplash.com/photo-1509721434272-b79147e0e708?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
-  //   },
-  //   {
-  //     url: "https://images.unsplash.com/photo-1506710507565-203b9f24669b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1536&q=80",
-  //   },
-  //   {
-  //     url: "https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
-  //   },
-  // ];
+
 
   const [fadeImages, setFadeImages] = useState([]);
 
@@ -351,10 +358,6 @@ export function Chat(props: ChatProps) {
             flexDirection: "column",
           }}
         >
-          <img
-            alt={character.getDisplayName()}
-            src={character.getAssets().rpmImageUriPortrait}
-          />
 
           <Carousel>
             {/* {fadeImages &&

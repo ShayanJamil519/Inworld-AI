@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Payment.css";
 import { useNavigate , useParams } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Payment = () => {
   const { email } = useParams();
@@ -15,8 +16,12 @@ const Payment = () => {
   const [packageName, setPackageName] = useState("");
 
   function handleClick(priceId) {
-    navigate(`/payment/checkout/${priceId}`);
+    navigate(`/payment/checkout/${priceId}/${email}`);
   }
+  function backtochat() {
+    navigate(`/chat/${email}`);
+  }
+  
 
   function getData() {
     console.log("user: ", user);
@@ -40,11 +45,14 @@ const Payment = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
-        navigate(`/`);
+        //console.log(JSON.stringify(response.data));
+        toast.success("Your subsciption has been cancelled");
+        navigate(`/chat/${email}`);
+        
       })
       .catch((error) => {
-        console.log(error);
+        //console.log(error);
+        toast.error(error.message);
       });
   };
 
@@ -117,7 +125,7 @@ const Payment = () => {
         </div>
       </div>
 
-      {user.subscriptionId != "" && (
+      {user.subscriptionId != "" ? (
         <div className="my__package">
           <h1 style={{ marginTop: "50px" }}>My Subscription</h1>
           <div className="package__child">
@@ -135,7 +143,24 @@ const Payment = () => {
             </div>
           </div>
         </div>
-      )}
+      ):(
+        <div className="my__package">
+        <h1 style={{ marginTop: "50px" }}>You Don't Have Any Subscriptions</h1>
+
+      </div>
+      
+      )
+      }
+      <div className="my__package">
+      <button
+      onClick={backtochat} 
+      style={{ marginTop: "50px" }}
+       className="back"
+       >
+            Back To Chat
+          </button>
+
+      </div>
     </div>
   );
 };

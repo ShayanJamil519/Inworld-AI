@@ -7,6 +7,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import "./App.css";
 import { Layout } from "./app/components/Layout";
@@ -163,16 +165,17 @@ function App() {
     <FormProvider {...formMethods}>
       {/* <Layout>{ initialized ? content : ''}</Layout> */}
       <Layout>
+      <ToastContainer autoClose={3000} />
         <Routes>
+
           <Route path="/" element={<Home />} />
           <Route path="/payment/:email" element={<Payment />} />
-          <Route path="/upload" element={<UploadImage />} />
-
+          <Route path="/upload/:email" element={<UploadImage />} />
           <Route
-            path="/payment/checkout/:priceId"
+            path="/payment/checkout/:priceId/:email"
             element={<CheckOutWithStripe />}
           />
-          <Route path="/chat" element={initialized ? content : ""} />
+          <Route path="/chat/:email" element={initialized ? content : ""} />
         </Routes>
       </Layout>
     </FormProvider>

@@ -238,7 +238,7 @@ app.get(
   passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
     var email = req.user?.email;
-    res.redirect("http://localhost:3000/chat?email=" + email);
+    res.redirect("http://localhost:3000/chat/" + email);
   }
 );
 

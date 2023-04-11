@@ -37,7 +37,7 @@
   font-size: 50px;
   font-weight: 100;
   font-family: math;
-  margin: 60px 0 8px 0;
+  margin: 90px 0 8px 0;
   color: #3b5998;
 }
 
@@ -119,7 +119,7 @@
   cursor: pointer;
   font-weight: 500;
   padding: 12px 0;
-  width: 80%;
+  width: 90%;
   margin: 30px auto 20px auto;
   border-radius: 50px;
   color: white;
@@ -130,17 +130,17 @@
   letter-spacing: 1px;
 }
 .payment__card button:hover {
-  background: #35508a;
+  background: #8ea3cf;
 }
 
 .back {
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
   font-weight: 500;
-  padding: 12px 0;
-  width: 13%;
+  padding: 10px 0;
+  width: 12%;
   margin: 0px auto 50px auto;
-  border-radius: 50px;
+  border-radius: 5px;
   color: white;
   border: none;
   background-color: #3b5998;
@@ -172,15 +172,14 @@
 }
 
 .cancel__subscription {
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
   font-weight: 500;
-  padding: 12px 12px;
-  /* width: 90%; */
-  /* margin: 30px auto 20px auto; */
-  border-radius: 15px;
+  padding: 12px 18px;
+  border-radius: 5px;
   color: white;
   border: none;
+  font-family: math;
   background-color: rgb(255, 37, 37);
 }
 
@@ -226,9 +225,15 @@
     font-family: "Times New Roman", Times, serif;
   }
 
+  .payment__container .package__child {
+    margin: 40px 10px;
+  }
+
   .package__child1 p {
     font-size: 13px;
+    width: fit-content;
     margin-top: 5px;
+    text-align: left;
   }
   .payment__card__container {
     width: 90%;
@@ -266,13 +271,13 @@
   }
 
   .cancel__subscription {
-    font-size: 18px;
+    font-size: 13px;
     font-family: "Times New Roman", Times, serif;
-
     cursor: pointer;
     font-weight: 500;
-    padding: 12px 0px;
-    border-radius: 25px;
+    width: 35vmin;
+    padding: 12px 7px;
+    border-radius: 5px;
   }
 }
 
@@ -281,9 +286,9 @@
 .paymentContainer {
   display: grid;
   place-items: center;
-  background-color: rgb(255, 255, 255);
-  height: 75vh;
-  margin: 2vmax;
+  background: #f7f7f7;
+  min-height: 100vh;
+  position: relative;
 }
 
 .paymentForm {
@@ -291,14 +296,12 @@
   height: 100%;
 }
 
-.paymentForm > p {
-  font: 400 2vmax "Roboto";
-  color: rgba(0, 0, 0, 0.753);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.13);
-  padding: 1vmax 0;
+.paymentForm > h1 {
+  color: #3b5998;
   text-align: center;
-  width: 50%;
-  margin: auto;
+  font-family: math;
+  font-size: 60px;
+  font-weight: 100;
 }
 
 .paymentForm > div {
@@ -315,6 +318,9 @@
   border: 1px solid rgba(0, 0, 0, 0.267);
   border-radius: 4px;
   outline: none;
+  font-size: 16px;
+  font-family: math;
+  background-color: white;
 }
 
 .paymentForm > div > svg {
@@ -326,19 +332,21 @@
 
 .paymentFormBtn {
   border: none;
-  background-color: #1919ff;
+  background-color: #3b5998;
   color: white;
-  font: 300 0.9vmax "Roboto";
+  font-size: 20px;
   width: 100%;
-  padding: 0.8vmax;
+  letter-spacing: 1px;
+  font-family: math;
+  padding: 13px;
   cursor: pointer;
-  transition: all 0.5s;
   outline: none;
+  border-radius: 10px;
 }
 
-/* .paymentFormBtn:hover {
-  background-color: rgb(179, 66, 46);
-} */
+.paymentFormBtn:hover {
+  background-color: #4a6aaf;
+}
 
 @media screen and (max-width: 600px) {
   .paymentForm {

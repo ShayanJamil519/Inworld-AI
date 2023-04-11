@@ -145,7 +145,7 @@ const Payment = () => {
 
       {user.subscriptionId != "" ? (
         <div className="my__package">
-          <h1 style={{ marginTop: "50px" }}>My Subscription</h1>
+          <h1>My Subscription</h1>
           <div className="package__child">
             <div className="package__child1">
               <p> Subscription ID: {user.subscriptionId}</p>

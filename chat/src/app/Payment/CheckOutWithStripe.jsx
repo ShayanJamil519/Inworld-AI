@@ -14,12 +14,11 @@ import { MdVpnLock } from "react-icons/md";
 import { GrMail } from "react-icons/gr";
 import { MdAccountCircle } from "react-icons/md";
 import "./Payment.css";
-import { useParams , useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const CheckOut = () => {
-
   const [name, setName] = useState("");
   //const [email, setEmail] = useState("");
   const [secret, setSecret] = useState("");
@@ -32,7 +31,7 @@ const CheckOut = () => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
-  const { priceId , email } = useParams();
+  const { priceId, email } = useParams();
 
   function backtochat() {
     navigate(`/chat/${email}`);
@@ -121,7 +120,6 @@ const CheckOut = () => {
               console.log(JSON.stringify(response.data));
               toast.success("Payment Successfull , Now Enjoy Higher Limits");
               navigate(`/chat/${email}`);
-
             })
             .catch((error) => {
               //console.log(error);
@@ -132,7 +130,6 @@ const CheckOut = () => {
         //console.log(response.message);
         toast.success("Payment Successfull , Now Enjoy Higher Limits");
         navigate(`/chat/${email}`);
-        
       }
     } catch (error) {
       console.log("I am catch error", error);
@@ -150,8 +147,9 @@ const CheckOut = () => {
 
   return (
     <div className="paymentContainer">
+      {/* SVG Shape */}
       <form className="paymentForm" onSubmit={(e) => submitHandler(e)}>
-        <p>Card Info</p>
+        <h1>Card Info</h1>
         <div>
           <MdAccountCircle />
           <input
@@ -191,15 +189,14 @@ const CheckOut = () => {
           // ref={payBtn}
           className="paymentFormBtn"
         />
-
       </form>
       <button
-      onClick={backtochat} 
-      style={{ marginTop: "50px" }}
-       className="back"
-       >
-            Back To Chat
-          </button>
+        onClick={backtochat}
+        style={{ marginTop: "50px" }}
+        className="back"
+      >
+        Back To Chat
+      </button>
     </div>
   );
 };
@@ -215,5 +212,3 @@ const CheckOutWithStripe = () => (
 );
 
 export default CheckOutWithStripe;
-
-

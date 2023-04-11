@@ -1,24 +1,51 @@
 .payment__container {
   width: 100%;
-  min-height: 95vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   font-family: auto;
   flex-direction: column;
+  background-color: #1b5358;
+  color: white;
+  position: relative;
+}
+
+.payment__container .custom-shape-divider-top-1681188123 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.payment__container .custom-shape-divider-top-1681188123 svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 50px;
+  transform: rotateY(180deg);
+}
+
+.payment__container .custom-shape-divider-top-1681188123 .shape-fill {
+  fill: #309aa3;
 }
 
 .payment__container h1 {
   font-size: 50px;
-  margin: 0;
+  font-weight: 100;
+  font-family: math;
+  margin: 60px 0 8px 0;
 }
 
 .payment__container h4 {
-  font-size: 20px;
+  font-family: math;
+  font-size: 22px;
   margin-top: 0;
   margin-bottom: 50px;
-  color: #525151;
+  letter-spacing: 1px;
 }
 
 .payment__card__container {
@@ -27,22 +54,23 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 40px;
+  gap: 50px;
 }
 
 .payment__card__container .payment__card {
-  flex: 0.28;
+  flex: 0.26;
   text-align: center;
-  background-color: white;
-  box-shadow: 1px 2px 2px 0px rgb(211 208 203);
+  background-color: #2f7a81;
   border-radius: 5px;
 }
 
 .payment__card h2 {
   text-transform: uppercase;
-  background-color: #1919ff;
+  font-weight: 100;
+  font-family: math;
+  background: #5cacb3;
   color: white;
-  font-weight: bold;
+
   border-bottom: 1px solid #9f9f9f;
   margin: 0;
   padding: 12px 0;
@@ -50,9 +78,11 @@
 }
 
 .payment__card h1 {
+  font-weight: 100;
+  font-family: math;
   margin: 0;
   font-size: 60px;
-  font-weight: bold;
+
   padding: 30px 0;
   border-bottom: 1px solid #9f9f9f;
 }
@@ -66,13 +96,17 @@
 }
 
 .payment__card .plan h3 {
-  color: #000000;
+  font-weight: 100;
+  font-family: math;
+  color: white;
   font-weight: 500;
 }
 
 .payment__card .plan h2 {
+  font-weight: 100;
+  font-family: math;
   color: white;
-  background-color: #1919ff;
+  background-color: #89c0c5;
   padding: 0px 30px;
   border-radius: 5px;
 }
@@ -82,40 +116,53 @@
   cursor: pointer;
   font-weight: 500;
   padding: 12px 0;
-  width: 90%;
+  width: 80%;
   margin: 30px auto 20px auto;
-  border-radius: 15px;
+  border-radius: 50px;
   color: white;
   border: none;
-  background-color: #1919ff;
+  background: #80b3b8;
+  font-family: math;
+  text-shadow: 2px 2px 59px #000000;
+  letter-spacing: 1px;
+}
+.payment__card button:hover {
+  background: #7aacb1;
 }
 
-.back{
+.back {
   font-size: 20px;
   cursor: pointer;
   font-weight: 500;
   padding: 12px 0;
-  width: 90%;
-  margin: 30px auto 20px auto;
-  border-radius: 15px;
+  width: 13%;
+  margin: 0px auto 30px auto;
+  border-radius: 50px;
   color: white;
   border: none;
-  background-color: #1919ff;
+  background-color: #7fb2b7;
 }
 
-.my__package {
+.payment__container .my__package {
   width: 100%;
   align-items: center;
   text-align: center;
 }
+.payment__container .my__package h1 {
+  margin-top: 90px;
+  margin-bottom: 20px;
+  font-size: 30px;
+  font-weight: 100;
+  font-family: math;
+}
 
-.package__child {
+.payment__container .package__child {
   display: flex;
   justify-content: space-between;
   margin: 50px 80px;
 }
 
-.package__child1 {
+.payment__container .package__child1 {
   display: flex;
   flex-direction: column;
   align-items: baseline;
@@ -140,21 +187,39 @@
   color: #525151;
 }
 
+.payment__container .custom-shape-divider-bottom-1681188330 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.payment__container .custom-shape-divider-bottom-1681188330 svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 83px;
+}
+
+.payment__container .custom-shape-divider-bottom-1681188330 .shape-fill {
+  fill: #309aa3;
+}
+
 /* Media Queries */
 
 @media screen and (max-width: 660px) {
-  .payment__container {
+  .payment__container h1 {
+    font-size: 35px;
+    margin-top: 60px;
     font-family: "Times New Roman";
   }
-  .payment__container h1 {
-    font-size: 30px;
-    margin: unset;
-    margin-top: 50px;
-  }
   .payment__container h4 {
-    font-size: 13px;
-    margin-top: 5px;
-    margin-bottom: 50px;
+    font-size: 15px;
+    margin-top: 10px;
+    margin-bottom: 60px;
+    font-family: "Times New Roman", Times, serif;
   }
 
   .package__child1 p {
@@ -162,7 +227,8 @@
     margin-top: 5px;
   }
   .payment__card__container {
-    gap: 80px;
+    width: 90%;
+    gap: 50px;
   }
   .payment__card__container .payment__card {
     flex: 0.85;
@@ -171,14 +237,33 @@
     margin: unset;
     padding: 20px 0;
   }
+
+  .payment__card h2 {
+    font-family: "Times New Roman", Times, serif;
+    letter-spacing: 1px;
+  }
   .payment__card button {
     font-size: 18px;
     padding: 12px 0;
     border-radius: 25px;
   }
 
+  .payment__container .my__package h1 {
+    margin-top: 70px;
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  .back {
+    font-size: 18px;
+    padding: 10px 0;
+    width: 45%;
+  }
+
   .cancel__subscription {
     font-size: 18px;
+    font-family: "Times New Roman", Times, serif;
 
     cursor: pointer;
     font-weight: 500;

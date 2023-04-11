@@ -113,14 +113,10 @@ function App() {
     setCharacters([]);
   }, [connection]);
 
-
   const stopAudio = useCallback(async () => {
-
     setAudio(!audio);
-    connection?.player?.mute(audio)
-
-
-  }, [connection,audio]);
+    connection?.player?.mute(audio);
+  }, [connection, audio]);
 
   const resetForm = useCallback(() => {
     formMethods.reset({
@@ -141,7 +137,6 @@ function App() {
     setInitialized(true);
   }, [formMethods]);
 
-
   const content = chatting ? (
     <>
       {character ? (
@@ -151,7 +146,7 @@ function App() {
           connection={connection!}
           playerName={playerName}
           onStopChatting={stopChatting}
-          onStopAudio= {stopAudio}
+          onStopAudio={stopAudio}
         />
       ) : (
         "Loading..."
@@ -164,20 +159,22 @@ function App() {
   return (
     <FormProvider {...formMethods}>
       {/* <Layout>{ initialized ? content : ''}</Layout> */}
-      <Layout>
-      <ToastContainer autoClose={3000} />
-        <Routes>
 
-          <Route path="/" element={<Home />} />
-          <Route path="/payment/:email" element={<Payment />} />
-          <Route path="/upload/:email" element={<UploadImage />} />
-          <Route
-            path="/payment/checkout/:priceId/:email"
-            element={<CheckOutWithStripe />}
-          />
-          <Route path="/chat/:email" element={initialized ? content : ""} />
-        </Routes>
-      </Layout>
+      <ToastContainer autoClose={3000} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/payment/:email" element={<Payment />} />
+        <Route path="/upload/:email" element={<UploadImage />} />
+        <Route
+          path="/payment/checkout/:priceId/:email"
+          element={<CheckOutWithStripe />}
+        />
+
+        <Route
+          path="/chat/:email"
+          element={<Layout>{initialized ? content : ""} </Layout>}
+        />
+      </Routes>
     </FormProvider>
   );
 }

@@ -71,6 +71,10 @@ export function Chat(props: ChatProps) {
   function paymentPage() {
     navigate(`/payment/${email}`);
   }
+
+  function uploadPage() {
+    navigate(`/upload`);
+  }
   const stopAudio = useCallback(async () => {
     
   }, [connection, audio]);
@@ -218,8 +222,8 @@ export function Chat(props: ChatProps) {
       var result = await fetchData();
       console.log("res"+ result)
       if(result==10 ){
-        console.log("here here")
-        toast.error('You have completed you api limits .Please upgrade to a Higher Package');
+        toast.error('You have completed your api limits .Please upgrade to a Higher Package');
+        navigate(`/payment/${email}`);
       }
       if (result == 1 || result == 2 || result == 3) {
         console.log("succ");
@@ -284,6 +288,7 @@ export function Chat(props: ChatProps) {
         console.log("first check made"+ data.sceneName)
         console.log("sceneNamee" + sceneNamee )
         console.log("charNamee" + characterNamee )
+        localStorage.setItem('email', email!);
       } catch (error) {
           console.error(error);
       }
@@ -465,6 +470,13 @@ export function Chat(props: ChatProps) {
             Donation
           </Button>
         </Grid>
+        
+           <Grid item>
+          <Button variant="outlined" onClick={uploadPage}>
+            Upload
+          </Button>
+        </Grid>
+        
       </Grid>
       <CopyConfirmedDialog
         copyConfirmOpen={copyConfirmOpen}

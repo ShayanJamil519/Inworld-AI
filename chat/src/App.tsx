@@ -116,7 +116,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/payment/:email" element={<Payment />} />
-        <Route path="/upload/:email" element={<UploadImage />} />
+        <Route path="/upload" element={<UploadImage />} />
         <Route
           path="/payment/checkout/:priceId/:email"
           element={<CheckOutWithStripe />}

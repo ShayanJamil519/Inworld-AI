@@ -1,12 +1,13 @@
 import axios from "axios";
 import React, { useState } from "react";
 import "./UploadImage.css";
-import { useNavigate , useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import skeletonImage from "./img__skeleton.png";
 
 const UploadImage = () => {
   const { email } = useParams();
   const [image, setImage] = useState([]);
-  const [imagesPreview, setImagesPreview] = useState([]);
+  const [imagesPreview, setImagesPreview] = useState([skeletonImage]);
   const navigate = useNavigate();
   const [customObject, updateCustomObject] = useState("customObjectTokenPay", {
     images: [],
@@ -126,14 +127,13 @@ const UploadImage = () => {
           Submit
         </button>
         <button
-      onClick={backtochat} 
-      style={{ marginTop: "50px" }}
-       className="back"
-       >
-            Back To Chat
-          </button>
+          onClick={backtochat}
+          style={{ marginTop: "50px" }}
+          className="back"
+        >
+          Back To Chat
+        </button>
       </div>
-
     </div>
   );
 };

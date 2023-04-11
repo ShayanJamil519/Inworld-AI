@@ -5,6 +5,7 @@ import {
 } from "@inworld/web-sdk";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useFormContext } from 'react-hook-form';
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { ToastContainer } from "react-toastify";
@@ -46,10 +47,10 @@ function App() {
   const [character, setCharacter] = useState<Character>();
   const [characters, setCharacters] = useState<Character[]>([]);
   const [chatHistory, setChatHistory] = useState<HistoryItem[]>([]);
-  const [chatting, setChatting] = useState(false);
-  const [audio, setAudio] = useState(true);
+  const [chatting, setChatting] = useState(true);
 
-  const [playerName, setPlayerName] = useState("");
+
+  
 
   const stateRef = useRef<CurrentContext>();
   stateRef.current = {
@@ -58,42 +59,11 @@ function App() {
     connection,
   };
 
-  const onHistoryChange = useCallback((history: HistoryItem[]) => {
+  /*const onHistoryChange = useCallback((history: HistoryItem[]) => {
     setChatHistory(history);
-  }, []);
+  }, []);*/
 
-  const openConnection = useCallback(async () => {
-    const form = formMethods.getValues();
-
-    setChatting(true);
-    setPlayerName(form.player?.name!);
-
-    const service = new InworldService({
-      onHistoryChange,
-      sceneName: form.scene?.name!,
-      playerName: form.player?.name!,
-      onReady: async () => {
-        console.log("Ready!");
-      },
-      onDisconnect: () => {
-        console.log("Disconnect!");
-      },
-    });
-    const characters = await service.connection.getCharacters();
-    const character = characters.find(
-      (c: Character) => c.getResourceName() === form.character?.name
-    );
-
-    if (character) {
-      service.connection.setCurrentCharacter(character);
-    }
-
-    setConnection(service.connection);
-
-    setCharacter(character);
-    setCharacters(characters);
-  }, [formMethods, onHistoryChange]);
-
+  
   const stopChatting = useCallback(async () => {
     // Disable flags
     setChatting(false);
@@ -113,17 +83,7 @@ function App() {
     setCharacters([]);
   }, [connection]);
 
-  const stopAudio = useCallback(async () => {
-    setAudio(!audio);
-    connection?.player?.mute(audio);
-  }, [connection, audio]);
 
-  const resetForm = useCallback(() => {
-    formMethods.reset({
-      ...defaults.configuration,
-    });
-    saveConfiguration(formMethods.getValues());
-  }, [formMethods]);
 
   useEffect(() => {
     const configuration = getConfiguration();
@@ -139,21 +99,13 @@ function App() {
 
   const content = chatting ? (
     <>
-      {character ? (
+      
         <Chat
-          character={character}
-          chatHistory={chatHistory}
-          connection={connection!}
-          playerName={playerName}
           onStopChatting={stopChatting}
-          onStopAudio={stopAudio}
         />
-      ) : (
-        "Loading..."
-      )}
     </>
   ) : (
-    <ConfigView onStart={openConnection} onResetForm={resetForm} />
+    <ConfigView  />
   );
 
   return (

@@ -9,8 +9,7 @@ import { save as saveConfiguration } from '../helpers/configuration';
 import axios from "axios";
 
 interface ConfigViewProps {
-  onStart: () => Promise<void>;
-  onResetForm: () => void;
+
 }
 export interface  Data{
   characterName: string;
@@ -80,7 +79,7 @@ export const ConfigView = (props: ConfigViewProps) => {
           
           <Button
             variant="contained"
-            onClick={props.onStart}
+
           >
             Start
           </Button>

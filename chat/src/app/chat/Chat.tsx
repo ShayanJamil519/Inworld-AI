@@ -14,7 +14,9 @@ import {
   CHAT_HISTORY_TYPE,
   HistoryItem,
   InworldConnectionService,
+  
 } from "@inworld/web-sdk";
+import { InworldService } from "../connection";
 
 import { History } from "./History";
 import { useCallback, useEffect, useState } from "react";
@@ -26,12 +28,9 @@ import { toast } from "react-toastify";
 import axios, { AxiosPromise } from "axios";
 
 interface ChatProps {
-  character: Character;
-  chatHistory: HistoryItem[];
-  connection: InworldConnectionService;
-  playerName: string;
+
   onStopChatting: () => void;
-  onStopAudio: () => void;
+
 }
 
 interface fetchData {
@@ -39,12 +38,7 @@ interface fetchData {
 }
 export function Chat(props: ChatProps) {
   const {
-    character,
-    chatHistory,
-    connection,
-    playerName,
     onStopChatting,
-    onStopAudio,
   } = props;
 
   const [text, setText] = useState("");
@@ -52,9 +46,16 @@ export function Chat(props: ChatProps) {
   const [copyConfirmOpen, setCopyConfirmOpen] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isaudio, setIsAudio] = useState(true);
-  const [images, setImages] = useState([]);
-  const [hasPlayedWorkaroundSound, setHasPlayedWorkaroundSound] =
-    useState(false);
+  const [playerName, setPlayerName] = useState("");
+  const [chatting, setChatting] = useState(false);
+  const [connection, setConnection] = useState<InworldConnectionService>();
+  const [chatHistory, setChatHistory] = useState<HistoryItem[]>([]);
+  const [characterNamee, setcharacterName] = useState('');
+  const [sceneNamee, setsceneName] = useState('');
+  const [hasPlayedWorkaroundSound, setHasPlayedWorkaroundSound] =useState(false);
+  const [character, setCharacter] = useState<Character>();
+  const [characters, setCharacters] = useState<Character[]>([]);
+  const [audio, setAudio] = useState(true);
   //const search = useLocation().search;
   //const email = new URLSearchParams(search).get("email");
   const { email } = useParams();
@@ -70,6 +71,9 @@ export function Chat(props: ChatProps) {
   function paymentPage() {
     navigate(`/payment/${email}`);
   }
+  const stopAudio = useCallback(async () => {
+    
+  }, [connection, audio]);
 
   async function fetchData(): Promise<Number> {
     var result = 10;
@@ -188,15 +192,15 @@ export function Chat(props: ChatProps) {
   }, [getTranscript, chatHistory]);
 
   const stopRecording = useCallback(() => {
-    connection.recorder.stop();
+    connection?.recorder.stop();
     setIsRecording(false);
-    connection.sendAudioSessionEnd();
+    connection?.sendAudioSessionEnd();
   }, [connection]);
 
   const startRecording = useCallback(async () => {
     try {
-      connection.sendAudioSessionStart();
-      await connection.recorder.start();
+      connection?.sendAudioSessionStart();
+      await connection?.recorder.start();
       setIsRecording(true);
     } catch (e) {
       console.error(e);
@@ -205,7 +209,7 @@ export function Chat(props: ChatProps) {
 
   const playWorkaroundSound = useCallback(() => {
     // Workaround for browsers with restrictive auto-play policies
-    connection.player.playWorkaroundSound();
+    connection?.player.playWorkaroundSound();
     setHasPlayedWorkaroundSound(true);
   }, [connection, setHasPlayedWorkaroundSound]);
 
@@ -231,7 +235,7 @@ export function Chat(props: ChatProps) {
       !hasPlayedWorkaroundSound && playWorkaroundSound();
       if (isRecording) {
         stopRecording();
-        connection.sendAudioSessionEnd();
+        connection?.sendAudioSessionEnd();
         setIsRecording(false);
         return;
       }
@@ -254,15 +258,65 @@ export function Chat(props: ChatProps) {
 
   const handleAudioClick = useCallback(async () => {
     setIsAudio(!isaudio);
-    return onStopAudio();
-  }, [isaudio]);
+    setAudio(!audio);
+    console.log("this was called")
+    connection?.player?.mute(audio);
+  }, [isaudio , connection , audio]);
 
 
 
   const [fadeImages, setFadeImages] = useState([]);
 
+  const onHistoryChange = useCallback((history: HistoryItem[]) => {
+    setChatHistory(history);
+  }, []);
+
   useEffect(() => {
+    const fetchPost = async() => {
+      try {
+        const {data} = await axios.get(
+          `http://localhost:4000/payment/names`
+        );
+        
+        setcharacterName(data?.characterName)
+        setsceneName(data?.sceneName)
+        setChatting(true);
+        console.log("first check made"+ data.sceneName)
+        console.log("sceneNamee" + sceneNamee )
+        console.log("charNamee" + characterNamee )
+      } catch (error) {
+          console.error(error);
+      }
+  };
+  fetchPost();
     const fetchData = async () => {
+      console.log("Second check Made")
+      setChatting(true);
+    setPlayerName("Participant");
+
+    const service = new InworldService({
+      onHistoryChange,
+      sceneName: sceneNamee,
+      playerName: "Participant",
+      onReady: async () => {
+        console.log("Ready!");
+      },
+      onDisconnect: () => {
+        console.log("Disconnect!");
+      },
+    });
+    const characters = await service.connection.getCharacters();
+    const character = characters.find(
+      (c: Character) => c.getResourceName() === characterNamee
+    );
+
+    if (character) {
+      service.connection.setCurrentCharacter(character);
+    }
+
+    setConnection(service.connection);
+    setCharacter(character);
+    setCharacters(characters);
       const { data } = await axios.get(`http://localhost:4000/api/img/all`);
       const images = data.images[0].images.map((image: any) => ({
         url: image.url,
@@ -270,7 +324,7 @@ export function Chat(props: ChatProps) {
       setFadeImages(images);
     };
     fetchData();
-  }, []);
+  }, [characterNamee , sceneNamee]);
   return (
     <>
       <Grid container sx={{ mb: 2, mt: 10 }}>
@@ -290,7 +344,7 @@ export function Chat(props: ChatProps) {
         >
           <History
             history={chatHistory}
-            character={character}
+            character={character!}
             playerName={playerName}
           />
           <Stack direction="row-reverse" sx={{ mb: "1" }}>

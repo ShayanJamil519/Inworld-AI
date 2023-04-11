@@ -7,7 +7,7 @@
   text-align: center;
   font-family: auto;
   flex-direction: column;
-  background-color: #1b5358;
+  background-color: white;
   color: white;
   position: relative;
 }
@@ -30,7 +30,7 @@
 }
 
 .payment__container .custom-shape-divider-top-1681188123 .shape-fill {
-  fill: #309aa3;
+  fill: #3b5998;
 }
 
 .payment__container h1 {
@@ -38,6 +38,7 @@
   font-weight: 100;
   font-family: math;
   margin: 60px 0 8px 0;
+  color: #3b5998;
 }
 
 .payment__container h4 {
@@ -45,6 +46,7 @@
   font-size: 22px;
   margin-top: 0;
   margin-bottom: 50px;
+  color: #3b5998;
   letter-spacing: 1px;
 }
 
@@ -60,7 +62,7 @@
 .payment__card__container .payment__card {
   flex: 0.26;
   text-align: center;
-  background-color: #2f7a81;
+  background-color: #3b5998;
   border-radius: 5px;
 }
 
@@ -68,7 +70,7 @@
   text-transform: uppercase;
   font-weight: 100;
   font-family: math;
-  background: #5cacb3;
+  background: #8b9dc3;
   color: white;
 
   border-bottom: 1px solid #9f9f9f;
@@ -82,6 +84,7 @@
   font-family: math;
   margin: 0;
   font-size: 60px;
+  color: white;
 
   padding: 30px 0;
   border-bottom: 1px solid #9f9f9f;
@@ -106,7 +109,7 @@
   font-weight: 100;
   font-family: math;
   color: white;
-  background-color: #89c0c5;
+  background-color: #8b9dc3;
   padding: 0px 30px;
   border-radius: 5px;
 }
@@ -121,13 +124,13 @@
   border-radius: 50px;
   color: white;
   border: none;
-  background: #80b3b8;
+  background: #8b9dc3;
   font-family: math;
   text-shadow: 2px 2px 59px #000000;
   letter-spacing: 1px;
 }
 .payment__card button:hover {
-  background: #7aacb1;
+  background: #35508a;
 }
 
 .back {
@@ -136,11 +139,11 @@
   font-weight: 500;
   padding: 12px 0;
   width: 13%;
-  margin: 0px auto 30px auto;
+  margin: 0px auto 50px auto;
   border-radius: 50px;
   color: white;
   border: none;
-  background-color: #7fb2b7;
+  background-color: #3b5998;
 }
 
 .payment__container .my__package {
@@ -187,24 +190,25 @@
   color: #525151;
 }
 
-.payment__container .custom-shape-divider-bottom-1681188330 {
+.payment__container .custom-shape-divider-bottom-1681215205 {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   overflow: hidden;
   line-height: 0;
+  transform: rotate(180deg);
 }
 
-.payment__container .custom-shape-divider-bottom-1681188330 svg {
+.payment__container .custom-shape-divider-bottom-1681215205 svg {
   position: relative;
   display: block;
-  width: calc(100% + 1.3px);
-  height: 83px;
+  width: calc(136% + 1.3px);
+  height: 50px;
 }
 
-.payment__container .custom-shape-divider-bottom-1681188330 .shape-fill {
-  fill: #309aa3;
+.payment__container .custom-shape-divider-bottom-1681215205 .shape-fill {
+  fill: #3b5998;
 }
 
 /* Media Queries */

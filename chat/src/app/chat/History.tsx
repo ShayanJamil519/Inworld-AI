@@ -128,8 +128,11 @@ export const History = (props: HistoryProps) => {
             title={title}
             key={index}
             data-id={item.id}
+            // height={"500rem"}
+
             // marginRight={isMobile ? "240px" : "0px"}
-            width={isMobile ? "50%" : "100%"}
+
+            width={isMobile ? "100%" : "100%"}
             sx={{
               ...(author && { textAlign: "left" }),
             }}

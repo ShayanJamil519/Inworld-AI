@@ -14,7 +14,6 @@ import {
   CHAT_HISTORY_TYPE,
   HistoryItem,
   InworldConnectionService,
-  
 } from "@inworld/web-sdk";
 import { InworldService } from "../connection";
 
@@ -23,23 +22,20 @@ import { useCallback, useEffect, useState } from "react";
 import { Stack } from "@mui/system";
 import { CopyConfirmedDialog } from "./CopyConfirmedDialog";
 import { RecordIcon } from "./Chat.styled";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios, { AxiosPromise } from "axios";
 
 interface ChatProps {
-
   onStopChatting: () => void;
-
 }
 
 interface fetchData {
   (): Promise<Number>;
 }
+// export function Chat() {
 export function Chat(props: ChatProps) {
-  const {
-    onStopChatting,
-  } = props;
+  const { onStopChatting } = props;
 
   const [text, setText] = useState("");
   const [copyDestination, setCopyDestination] = useState("");
@@ -50,9 +46,10 @@ export function Chat(props: ChatProps) {
   const [chatting, setChatting] = useState(false);
   const [connection, setConnection] = useState<InworldConnectionService>();
   const [chatHistory, setChatHistory] = useState<HistoryItem[]>([]);
-  const [characterNamee, setcharacterName] = useState('');
-  const [sceneNamee, setsceneName] = useState('');
-  const [hasPlayedWorkaroundSound, setHasPlayedWorkaroundSound] =useState(false);
+  const [characterNamee, setcharacterName] = useState("");
+  const [sceneNamee, setsceneName] = useState("");
+  const [hasPlayedWorkaroundSound, setHasPlayedWorkaroundSound] =
+    useState(false);
   const [character, setCharacter] = useState<Character>();
   const [characters, setCharacters] = useState<Character[]>([]);
   const [audio, setAudio] = useState(true);
@@ -75,9 +72,7 @@ export function Chat(props: ChatProps) {
   function uploadPage() {
     navigate(`/upload`);
   }
-  const stopAudio = useCallback(async () => {
-    
-  }, [connection, audio]);
+  const stopAudio = useCallback(async () => {}, [connection, audio]);
 
   async function fetchData(): Promise<Number> {
     var result = 10;
@@ -86,17 +81,17 @@ export function Chat(props: ChatProps) {
       `http://localhost:4000/payment/package/${email}`
     );
     if (data.package == 0) {
-      try{
-        const { data } = await axios.get(`http://localhost:4000/api/user/limit`);
+      try {
+        const { data } = await axios.get(
+          `http://localhost:4000/api/user/limit`
+        );
         if (data.message == "nice") {
           console.log("Working Great h");
           result = 1;
         }
-      }catch (error) {
+      } catch (error) {
         console.log("I am catch error", error);
       }
-
-
     }
     if (data.package == 1) {
       const { data } = await axios.get(
@@ -220,9 +215,11 @@ export function Chat(props: ChatProps) {
   async function asyncHandleSendData() {
     if (text) {
       var result = await fetchData();
-      console.log("res"+ result)
-      if(result==10 ){
-        toast.error('You have completed your api limits .Please upgrade to a Higher Package');
+      console.log("res" + result);
+      if (result == 10) {
+        toast.error(
+          "You have completed your api limits .Please upgrade to a Higher Package"
+        );
         navigate(`/payment/${email}`);
       }
       if (result == 1 || result == 2 || result == 3) {
@@ -230,27 +227,27 @@ export function Chat(props: ChatProps) {
         !hasPlayedWorkaroundSound && playWorkaroundSound();
         connection?.sendText(text);
         setText("");
-      } 
+      }
     }
   }
 
   const handleSpeakClick = useCallback(async () => {
-
-      !hasPlayedWorkaroundSound && playWorkaroundSound();
-      if (isRecording) {
-        stopRecording();
-        connection?.sendAudioSessionEnd();
-        setIsRecording(false);
-        return;
-      }
-      var result = await fetchData();
-      if (result == 1 || result == 2 || result == 3) {
-          return startRecording();
-      }
-      if(result==10 ){
-        toast.error('You have completed you api limits .Please upgrade to a Higher Package');
-      }
-
+    !hasPlayedWorkaroundSound && playWorkaroundSound();
+    if (isRecording) {
+      stopRecording();
+      connection?.sendAudioSessionEnd();
+      setIsRecording(false);
+      return;
+    }
+    var result = await fetchData();
+    if (result == 1 || result == 2 || result == 3) {
+      return startRecording();
+    }
+    if (result == 10) {
+      toast.error(
+        "You have completed you api limits .Please upgrade to a Higher Package"
+      );
+    }
   }, [
     connection,
     hasPlayedWorkaroundSound,
@@ -263,11 +260,9 @@ export function Chat(props: ChatProps) {
   const handleAudioClick = useCallback(async () => {
     setIsAudio(!isaudio);
     setAudio(!audio);
-    console.log("this was called")
+    console.log("this was called");
     connection?.player?.mute(audio);
-  }, [isaudio , connection , audio]);
-
-
+  }, [isaudio, connection, audio]);
 
   const [fadeImages, setFadeImages] = useState([]);
 
@@ -276,52 +271,50 @@ export function Chat(props: ChatProps) {
   }, []);
 
   useEffect(() => {
-    const fetchPost = async() => {
+    const fetchPost = async () => {
       try {
-        const {data} = await axios.get(
-          `http://localhost:4000/payment/names`
-        );
-        
-        setcharacterName(data?.characterName)
-        setsceneName(data?.sceneName)
+        const { data } = await axios.get(`http://localhost:4000/payment/names`);
+
+        setcharacterName(data?.characterName);
+        setsceneName(data?.sceneName);
         setChatting(true);
-        console.log("first check made"+ data.sceneName)
-        console.log("sceneNamee" + sceneNamee )
-        console.log("charNamee" + characterNamee )
-        localStorage.setItem('email', email!);
+        console.log("first check made" + data.sceneName);
+        console.log("sceneNamee" + sceneNamee);
+        console.log("charNamee" + characterNamee);
+        localStorage.setItem("email", email!);
       } catch (error) {
-          console.error(error);
+        console.error(error);
       }
-  };
-  fetchPost();
+    };
+    fetchPost();
     const fetchData = async () => {
-      console.log("Second check Made")
+      console.log("Second check Made");
       setChatting(true);
-    setPlayerName("Participant");
+      setPlayerName("Participant");
 
-    const service = new InworldService({
-      onHistoryChange,
-      sceneName: sceneNamee,
-      playerName: "Participant",
-      onReady: async () => {
-        console.log("Ready!");
-      },
-      onDisconnect: () => {
-        console.log("Disconnect!");
-      },
-    });
-    const characters = await service.connection.getCharacters();
-    const character = characters.find(
-      (c: Character) => c.getResourceName() === characterNamee
-    );
+      const service = new InworldService({
+        onHistoryChange,
+        sceneName: sceneNamee,
+        playerName: "Participant",
+        onReady: async () => {
+          console.log("Ready!");
+        },
+        onDisconnect: () => {
+          console.log("Disconnect!");
+        },
+      });
+      const characters = await service.connection.getCharacters();
+      const character = characters.find(
+        (c: Character) => c.getResourceName() === characterNamee
+      );
 
-    if (character) {
-      service.connection.setCurrentCharacter(character);
-    }
+      if (character) {
+        service.connection.setCurrentCharacter(character);
+      }
 
-    setConnection(service.connection);
-    setCharacter(character);
-    setCharacters(characters);
+      setConnection(service.connection);
+      setCharacter(character);
+      setCharacters(characters);
       const { data } = await axios.get(`http://localhost:4000/api/img/all`);
       const images = data.images[0].images.map((image: any) => ({
         url: image.url,
@@ -329,7 +322,7 @@ export function Chat(props: ChatProps) {
       setFadeImages(images);
     };
     fetchData();
-  }, [characterNamee , sceneNamee]);
+  }, [characterNamee, sceneNamee]);
   return (
     <>
       <Grid container sx={{ mb: 2, mt: 10 }}>
@@ -339,7 +332,10 @@ export function Chat(props: ChatProps) {
           sm={6}
           sx={{
             backgroundColor: "white",
-            padding: "0.5rem 1.5rem",
+            padding: {
+              lg: "0.5rem 1.5rem",
+              sm: "0.5rem 0em",
+            },
 
             borderRadius: "1rem",
             textAlign: "center",
@@ -357,7 +353,18 @@ export function Chat(props: ChatProps) {
               <CopyAll fontSize="small" />
             </IconButton>
           </Stack>
-          <Stack direction="row" alignItems="center" gap={1}>
+          <Stack
+            // sx={{
+            //   direction: {
+            //     lg: "row",
+            //     md: "row",
+            //     sm: "row",
+            //   },
+            // }}
+            direction={"row"}
+            alignItems="center"
+            gap={1}
+          >
             <TextField
               variant="standard"
               fullWidth
@@ -410,31 +417,20 @@ export function Chat(props: ChatProps) {
           sm={5}
           sx={{
             backgroundColor: "white",
-            padding: "0.5rem 1.5rem",
+            padding: " 1.5rem",
             borderRadius: "1rem",
             textAlign: "center",
             display: "flex",
             flexDirection: "column",
           }}
         >
-
           <Carousel>
-            {/* {fadeImages &&
-              fadeImages.map((item, i) => (
-                <img
-                  // className="CarouselImage"
-                  style={{ width: "500px", height: "500px" }}
-                  key={i}
-                  src={item.url}
-                  alt={`${i} Slide`}
-                />
-              ))} */}
             {fadeImages &&
               fadeImages.map((item: any, i) => (
                 <div
                   style={{
                     width: "500px",
-                    height: "500px",
+                    height: "460px",
                     backgroundColor: "yellow",
                   }}
                 >
@@ -443,6 +439,7 @@ export function Chat(props: ChatProps) {
                       objectFit: "cover",
                       width: "100%",
                       height: "100%",
+                      borderRadius: "5px",
                     }}
                     key={i}
                     src={item.url}
@@ -460,23 +457,47 @@ export function Chat(props: ChatProps) {
         alignItems="center"
         justifyContent={"flex-start"}
       >
-        <Grid item>
+        {/* <Grid item>
           <Button variant="outlined" onClick={onStopChatting}>
             Back to settings
           </Button>
-        </Grid>
+        </Grid> */}
         <Grid item>
-          <Button variant="outlined" onClick={paymentPage}>
+          <Button
+            sx={{
+              backgroundColor: "#3b5998",
+              fontSize: {
+                lg: "20px",
+                sm: "16px",
+              },
+              color: "white",
+              padding: "6px 45px",
+              "&:hover": {
+                backgroundColor: "#4a6aaf",
+              },
+            }}
+            onClick={paymentPage}
+          >
             Donation
           </Button>
         </Grid>
-        
-           <Grid item>
-          <Button variant="outlined" onClick={uploadPage}>
+
+        <Grid item>
+          <Button
+            sx={{
+              backgroundColor: "#3b5998",
+              fontSize: "20px",
+              color: "white",
+              padding: "6px 45px",
+              "&:hover": {
+                backgroundColor: "#4a6aaf",
+              },
+            }}
+            onClick={uploadPage}
+          >
             Upload
           </Button>
         </Grid>
-        
       </Grid>
       <CopyConfirmedDialog
         copyConfirmOpen={copyConfirmOpen}

@@ -5,7 +5,7 @@ import {
 } from "@inworld/web-sdk";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useFormContext } from 'react-hook-form';
+import { useFormContext } from "react-hook-form";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { ToastContainer } from "react-toastify";
@@ -49,9 +49,6 @@ function App() {
   const [chatHistory, setChatHistory] = useState<HistoryItem[]>([]);
   const [chatting, setChatting] = useState(true);
 
-
-  
-
   const stateRef = useRef<CurrentContext>();
   stateRef.current = {
     characters,
@@ -63,7 +60,6 @@ function App() {
     setChatHistory(history);
   }, []);*/
 
-  
   const stopChatting = useCallback(async () => {
     // Disable flags
     setChatting(false);
@@ -83,8 +79,6 @@ function App() {
     setCharacters([]);
   }, [connection]);
 
-
-
   useEffect(() => {
     const configuration = getConfiguration();
 
@@ -99,13 +93,10 @@ function App() {
 
   const content = chatting ? (
     <>
-      
-        <Chat
-          onStopChatting={stopChatting}
-        />
+      <Chat onStopChatting={stopChatting} />
     </>
   ) : (
-    <ConfigView  />
+    <ConfigView />
   );
 
   return (
@@ -125,6 +116,7 @@ function App() {
         <Route
           path="/chat/:email"
           element={<Layout>{initialized ? content : ""} </Layout>}
+          // element={initialized ? content : ""}
         />
       </Routes>
     </FormProvider>

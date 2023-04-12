@@ -1,6 +1,6 @@
-import { Box, CssBaseline } from '@mui/material';
-import { ReactNode } from 'react';
-import { Main } from './Main';
+import { Box, CssBaseline } from "@mui/material";
+import { ReactNode } from "react";
+import { Main } from "./Main";
 
 interface LayoutProps {
   children?: ReactNode;
@@ -11,9 +11,7 @@ export function Layout(props: LayoutProps) {
     <Box>
       <CssBaseline />
       <Main>
-        <Box sx={{ maxWidth: '1200px', mx: 'auto' }}>
-          {props.children}
-        </Box>
+        <Box sx={{ maxWidth: "1200px", mx: "auto" }}>{props.children}</Box>
       </Main>
     </Box>
   );

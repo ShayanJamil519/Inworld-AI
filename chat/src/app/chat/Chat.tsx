@@ -423,13 +423,13 @@ export function Chat(props: ChatProps) {
               fadeImages.map((item: any, i) => (
                 <div
                   style={{
-                    width: "420px",
+                    width: "100%",
                     height: "420px",
                   }}
                 >
                   <img
                     style={{
-                      objectFit: "cover",
+                      objectFit: "fill",
                       width: "100%",
                       height: "100%",
                       borderRadius: "5px",

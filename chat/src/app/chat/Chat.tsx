@@ -334,7 +334,7 @@ export function Chat(props: ChatProps) {
             backgroundColor: "white",
             padding: {
               lg: "0.5rem 1.5rem",
-              sm: "0.5rem 0em",
+              sm: "0.5rem 0rem",
             },
 
             borderRadius: "1rem",
@@ -354,16 +354,10 @@ export function Chat(props: ChatProps) {
             </IconButton>
           </Stack>
           <Stack
-            // sx={{
-            //   direction: {
-            //     lg: "row",
-            //     md: "row",
-            //     sm: "row",
-            //   },
-            // }}
             direction={"row"}
             alignItems="center"
             gap={1}
+            padding={"0 0.5rem"}
           >
             <TextField
               variant="standard"
@@ -429,9 +423,8 @@ export function Chat(props: ChatProps) {
               fadeImages.map((item: any, i) => (
                 <div
                   style={{
-                    width: "500px",
-                    height: "460px",
-                    backgroundColor: "yellow",
+                    width: "420px",
+                    height: "420px",
                   }}
                 >
                   <img
@@ -486,7 +479,10 @@ export function Chat(props: ChatProps) {
           <Button
             sx={{
               backgroundColor: "#3b5998",
-              fontSize: "20px",
+              fontSize: {
+                lg: "20px",
+                sm: "16px",
+              },
               color: "white",
               padding: "6px 45px",
               "&:hover": {

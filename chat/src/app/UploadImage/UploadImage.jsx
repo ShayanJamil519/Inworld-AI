@@ -1,11 +1,12 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import "./UploadImage.css";
 import { useNavigate, useParams } from "react-router-dom";
 import skeletonImage from "./img__skeleton.png";
 
 const UploadImage = () => {
-  const { email } = useParams();
+  //const { email } = useParams();
+  const [email, setEmail] = useState("");
   const [image, setImage] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([skeletonImage]);
   const navigate = useNavigate();
@@ -18,6 +19,11 @@ const UploadImage = () => {
   function backtochat() {
     navigate(`/chat/${email}`);
   }
+  useEffect(() => {
+    const email = localStorage.getItem('email');
+    console.log(email)
+    setEmail(email)
+  }, []);
 
   const createProductImagesChange = (e) => {
     const files = Array.from(e.target.files);
@@ -72,10 +78,12 @@ const UploadImage = () => {
 
   // Then always put request
   const handleSubmit = async () => {
+    if(email=="mrazacule@gmail.com"  ){
     await axios
       .put("http://localhost:4000/api/img/update", {
         images,
       })
+      console.log("images sent"+ images)
       .then((res) => {
         console.log(res);
         // toast.success("Token created successfully");
@@ -84,6 +92,10 @@ const UploadImage = () => {
         // }, "2000");
       })
       .catch((err) => console.log(err));
+    }
+    else{
+      console.log("haaaaaa")
+    }
   };
 
   return (

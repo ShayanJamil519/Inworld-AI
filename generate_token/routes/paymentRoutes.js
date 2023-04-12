@@ -4,7 +4,8 @@ const {
   getPublishableKey,
   cancelSubscription,
   getNames,
-   getLimits
+   getLimits,
+   getPackageId
   
 } = require("../controller/paymentController");
 
@@ -16,6 +17,7 @@ router.route("/create-subscription").post(createSubscription);
 router.route("/get-publishableKey").get(getPublishableKey);
 router.route("/names").get(getNames);
 router.route("/limits").get(getLimits);
+router.route("/ids").get(getPackageId);
 router.route("/delete").delete(cancelSubscription);
 
 //User routes which are here due to avoid express limit

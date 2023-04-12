@@ -89,6 +89,19 @@ const getNames = async (req, res) => {
   }
 };
 
+// get character and scene name on the frontend
+const getPackageId = async (req, res) => {
+  try {
+    res.send({
+      standardId: process.env.STRIPE_PACKAGE_ID1,
+      premiumId:process.env.STRIPE_PACKAGE_ID2
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
+
 
 // get limits and rates of free , standard , premium packages
 const getLimits = async (req, res) => {
@@ -136,7 +149,8 @@ module.exports = {
   getPublishableKey,
   cancelSubscription,
   getNames,
-  getLimits
+  getLimits,
+  getPackageId
 };
 
 // sub_1MuMO0H5DTXndbM5mRHbybUg

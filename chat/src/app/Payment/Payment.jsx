@@ -9,6 +9,8 @@ const Payment = () => {
   const [freeLimit, setfreeLimit] = useState("");
   const [standardLimit, setstandardLimit] = useState("");
   const [premiumLimit, setpremiumLimit] = useState("");
+  const [standardid, setstandardid] = useState("");
+  const [premiumid, setpremiumid] = useState("");
   const [standardCharges, setstandardCharges] = useState("");
   const [premiumCharges, setpremiumCharges] = useState("");
   const navigate = useNavigate();
@@ -16,6 +18,7 @@ const Payment = () => {
   const [packageName, setPackageName] = useState("");
 
   function handleClick(priceId) {
+    console.log(priceId);
     navigate(`/payment/checkout/${priceId}/${email}`);
   }
   function backtochat() {
@@ -62,6 +65,14 @@ const Payment = () => {
         console.log(res.data.user);
         setUser({ ...res.data.user });
       });
+      axios
+      .get(`http://localhost:4000/payment/ids`)
+      .then((res) => {
+        setstandardid(res.data.standardId)
+        setpremiumid(res.data.premiumId)
+        console.log("stand" + standardid)
+      });
+    
     axios
       .get(`http://localhost:4000/payment/limits`)
 
@@ -126,7 +137,7 @@ const Payment = () => {
             <h3>API Rate Limit:</h3>
             <h2>{standardLimit}</h2>
           </div>
-          <button onClick={() => handleClick("price_1MtId7H5DTXndbM5S6011iYS")}>
+          <button onClick={() => handleClick(standardid)}>
             Choose
           </button>
         </div>
@@ -137,7 +148,7 @@ const Payment = () => {
             <h3>API Rate Limit:</h3>
             <h2>{premiumLimit}</h2>
           </div>
-          <button onClick={() => handleClick("price_1MtId7H5DTXndbM57B16ve7p")}>
+          <button onClick={() => handleClick(premiumid)}>
             Choose
           </button>
         </div>

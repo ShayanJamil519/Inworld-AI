@@ -50,6 +50,7 @@ exports.updateImg = catchAsyncErrors(async (req, res, next) => {
   } else {
     images = req.body.images;
   }
+  console.log(images)
 
   if (images !== undefined) {
     // Deleting Images From Cloudinary

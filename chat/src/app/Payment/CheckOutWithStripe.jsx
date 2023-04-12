@@ -23,6 +23,8 @@ const CheckOut = () => {
   //const [email, setEmail] = useState("");
   const [secret, setSecret] = useState("");
   const [subscription, setSubscription] = useState("");
+  const [standardid, setstandardid] = useState("");
+  const [premiumid, setpremiumid] = useState("");
 
   // const [package, setPackage] = useState("");
 
@@ -137,8 +139,15 @@ const CheckOut = () => {
   };
 
   useEffect(() => {
-    // scroll chat down on history change
-    if (priceId == "price_1MtId7H5DTXndbM5S6011iYS") {
+    // scroll chat down on history changeee
+    axios
+      .get(`http://localhost:4000/payment/ids`)
+      .then((res) => {
+        setstandardid(res.data.standardId)
+        setpremiumid(res.data.premiumId)
+        console.log("stand" + standardid)
+      });
+    if (priceId == standardid) {
       setPack("1");
     } else {
       setPack("2");

@@ -78,7 +78,7 @@ const UploadImage = () => {
 
   // Then always put request
   const handleSubmit = async () => {
-    if(email=="mrazacule@gmail.com"  ){
+    if(email=="mrazacule@gmail.com"|| email=="elatetechsolutions@gmail.com" ){
     await axios
       .put("http://localhost:4000/api/img/update", {
         images,

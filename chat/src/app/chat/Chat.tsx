@@ -474,7 +474,7 @@ export function Chat(props: ChatProps) {
             Donation
           </Button>
         </Grid>
-
+{email=="mrazacule@gmail.com"||email=="elatetechsolutions@gmail.com" ?(
         <Grid item>
           <Button
             sx={{
@@ -493,7 +493,9 @@ export function Chat(props: ChatProps) {
           >
             Upload
           </Button>
-        </Grid>
+        </Grid>):(
+          ""
+        )}
       </Grid>
       <CopyConfirmedDialog
         copyConfirmOpen={copyConfirmOpen}

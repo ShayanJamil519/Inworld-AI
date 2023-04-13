@@ -80,7 +80,7 @@ const UploadImage = () => {
   const handleSubmit = async () => {
     if(email=="mrazacule@gmail.com"|| email=="elatetechsolutions@gmail.com" ){
     await axios
-      .put("http://localhost:4000/api/img/update", {
+      .put("https://dull-red-ant-hem.cyclic.app/api/img/update", {
         images,
       })
       console.log("images sent"+ images)

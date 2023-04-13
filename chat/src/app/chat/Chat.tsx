@@ -78,12 +78,12 @@ export function Chat(props: ChatProps) {
     var result = 10;
     console.log(email);
     const { data } = await axios.get(
-      `http://localhost:4000/payment/package/${email}`
+      `https://dull-red-ant-hem.cyclic.app/payment/package/${email}`
     );
     if (data.package == 0) {
       try {
         const { data } = await axios.get(
-          `http://localhost:4000/api/user/limit`
+          `https://dull-red-ant-hem.cyclic.app/api/user/limit`
         );
         if (data.message == "nice") {
           console.log("Working Great h");
@@ -95,7 +95,7 @@ export function Chat(props: ChatProps) {
     }
     if (data.package == 1) {
       const { data } = await axios.get(
-        `http://localhost:4000/api/standarduser/limit`
+        `https://dull-red-ant-hem.cyclic.app/api/standarduser/limit`
       );
       if (data.message == "nice") {
         console.log("Working Great");
@@ -104,7 +104,7 @@ export function Chat(props: ChatProps) {
     }
     if (data.package == 2) {
       const { data } = await axios.get(
-        `http://localhost:4000/api/premiumuser/limit`
+        `https://dull-red-ant-hem.cyclic.app/api/premiumuser/limit`
       );
       if (data.message == "nice") {
         console.log("Working Great");
@@ -273,7 +273,7 @@ export function Chat(props: ChatProps) {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:4000/payment/names`);
+        const { data } = await axios.get(`https://dull-red-ant-hem.cyclic.app/payment/names`);
 
         setcharacterName(data?.characterName);
         setsceneName(data?.sceneName);
@@ -315,7 +315,7 @@ export function Chat(props: ChatProps) {
       setConnection(service.connection);
       setCharacter(character);
       setCharacters(characters);
-      const { data } = await axios.get(`http://localhost:4000/api/img/all`);
+      const { data } = await axios.get(`https://dull-red-ant-hem.cyclic.app/api/img/all`);
       const images = data.images[0].images.map((image: any) => ({
         url: image.url,
       }));

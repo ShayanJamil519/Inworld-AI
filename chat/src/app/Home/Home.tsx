@@ -34,22 +34,24 @@ const Home = () => {
       <h1>Welcome to InworldAi</h1>
       <p>Chat With your Favourite Characters</p>
       <div className="buttons__container">
-        <Link to="http://localhost:4000/auth/google">
+        <Link to="https://dull-red-ant-hem.cyclic.app/auth/google">
           <button className="socials__login">
             {" "}
             <FcGoogle /> Continue with google
           </button>
         </Link>
-        <Link to="http://localhost:4000/auth/facebook">
+        <Link to="https://dull-red-ant-hem.cyclic.app/auth/facebook">
           <button className="socials__login">
             {" "}
             <FaFacebookF style={{ color: "#3b5998" }} /> Continue with facebook
           </button>
         </Link>
+        <Link to="https://dull-red-ant-hem.cyclic.app/auth/twitter">
         <button className="socials__login">
           {" "}
           <BsTwitter style={{ color: "#00acee" }} /> Continue with twitter
         </button>
+        </Link>
       </div>
       {/* SVG Shape */}
 

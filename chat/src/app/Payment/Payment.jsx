@@ -37,7 +37,7 @@ const Payment = () => {
     let config = {
       method: "delete",
       maxBodyLength: Infinity,
-      url: "http://localhost:4000/payment/delete",
+      url: "https://dull-red-ant-hem.cyclic.app/payment/delete",
       headers: {
         "Content-Type": "application/json",
       },
@@ -59,14 +59,14 @@ const Payment = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/payment/package/get/${email}`)
+      .get(`https://dull-red-ant-hem.cyclic.app/payment/package/get/${email}`)
       .then((res) => {
         console.log(res);
         console.log(res.data.user);
         setUser({ ...res.data.user });
       });
       axios
-      .get(`http://localhost:4000/payment/ids`)
+      .get(`https://dull-red-ant-hem.cyclic.app/payment/ids`)
       .then((res) => {
         setstandardid(res.data.standardId)
         setpremiumid(res.data.premiumId)
@@ -74,7 +74,7 @@ const Payment = () => {
       });
     
     axios
-      .get(`http://localhost:4000/payment/limits`)
+      .get(`https://dull-red-ant-hem.cyclic.app/payment/limits`)
 
       .then((res) => {
         setfreeLimit(res.data.freeLimit);
@@ -83,6 +83,7 @@ const Payment = () => {
         setstandardCharges(res.data.standardCharges);
         setpremiumCharges(res.data.premiumCharges);
       });
+      console.log("user pack" +user.package)
     if (user.package == "0") {
       setPackageName("Free Package");
     } else if (user.package == "1") {

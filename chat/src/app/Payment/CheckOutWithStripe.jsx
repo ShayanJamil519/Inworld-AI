@@ -20,7 +20,7 @@ import { toast } from "react-toastify";
 
 const CheckOut = () => {
   const [name, setName] = useState("");
-  //const [email, setEmail] = useState("");
+  const [key, setKey] = useState("");
   const [secret, setSecret] = useState("");
   const [subscription, setSubscription] = useState("");
   const [standardid, setstandardid] = useState("");
@@ -41,8 +41,8 @@ const CheckOut = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    // let pkg = await getPackage(priceId);
-    console.log(pack);
+    
+    console.log("pacl" +pack);
     try {
       const cardElement = elements?.getElement(CardNumberElement);
       if (!cardElement) {
@@ -64,7 +64,7 @@ const CheckOut = () => {
 
       // // call the backend to create subscription
       const response = await fetch(
-        "http://localhost:4000/payment/create-subscription",
+        "https://dull-red-ant-hem.cyclic.app/payment/create-subscription",
         {
           method: "POST",
           headers: {
@@ -106,7 +106,7 @@ const CheckOut = () => {
           let config = {
             method: "put",
             maxBodyLength: Infinity,
-            url: `http://localhost:4000/payment/package/update/${email}`,
+            url: `https://dull-red-ant-hem.cyclic.app/payment/package/update/${email}`,
             headers: {
               "Content-Type": "application/json",
             },
@@ -141,18 +141,35 @@ const CheckOut = () => {
   useEffect(() => {
     // scroll chat down on history changeee
     axios
-      .get(`http://localhost:4000/payment/ids`)
+      .get(`https://dull-red-ant-hem.cyclic.app/payment/ids`)
       .then((res) => {
         setstandardid(res.data.standardId)
         setpremiumid(res.data.premiumId)
-        console.log("stand" + standardid)
+
+        if(priceId===res.data.standardId){
+
+          setPack("1")
+
+        }
+        if(priceId===res.data.premiumId){
+
+          setPack("2")
+        }
       });
-    if (priceId == standardid) {
-      setPack("1");
-    } else {
-      setPack("2");
-    }
-  }, [priceId]);
+
+      axios
+      .get(`https://dull-red-ant-hem.cyclic.app/payment/get-publishableKey`)
+      .then((res) => {
+        setKey(res.data.publishableKey)
+        console.log("key" +key)
+
+
+      });
+    
+  }, [ standardid , premiumid , key]);
+
+
+
 
   return (
     <div className="paymentContainer">
@@ -210,7 +227,8 @@ const CheckOut = () => {
   );
 };
 
-const CheckOutWithStripe = () => (
+/*const CheckOutWithStripe = () => (
+
   <Elements
     stripe={loadStripe(
       "pk_test_51KqjSfH5DTXndbM5FeV5p2pkow6DMx57X4bV7AOcUzZAt3J1LHxeOdOBLUshVyKzOaDeBGJqIRt5PDFcd5JA1VLY005qzetSFm"
@@ -220,4 +238,38 @@ const CheckOutWithStripe = () => (
   </Elements>
 );
 
+export default CheckOutWithStripe;*/
+
+function CheckOutWithStripe() {
+  const [stripekey, setStripeKey] = useState("");
+  useEffect(() => {
+    // scroll chat down on history changeee
+    
+      axios
+      .get(`https://dull-red-ant-hem.cyclic.app/payment/get-publishableKey`)
+      .then((res) => {
+        setStripeKey(res.data.publishableKey)
+        console.log("key" +stripekey)
+
+
+      });
+    
+  }, [ stripekey]);
+
+
+
+  return (
+    <div>
+      <Elements
+    stripe={loadStripe(
+      stripekey
+    )}
+  >
+    <CheckOut />
+  </Elements>
+    </div>
+  );
+}
+
 export default CheckOutWithStripe;
+
